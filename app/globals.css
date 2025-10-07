@@ -1,0 +1,294 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+@custom-variant dark (&:is(.dark *));
+
+/* Smooth scrolling for anchor links */
+html {
+  scroll-behavior: smooth;
+}
+
+:root {
+  --background: #C7F2A4;
+  --foreground: #222222;
+  --card: #FFFFFF;
+  --card-foreground: #111827;
+  --popover: #f9fafb;
+  --popover-foreground: #111827;
+  --primary: #F6C445;
+  --primary-foreground: #f9fafb;
+  --secondary: #FFB3C6;
+  --secondary-foreground: #737373;
+  --muted: #f3f4f6;
+  --muted-foreground: #737373;
+  --accent: #AEE1FF;
+  --accent-foreground: #737373;
+  --destructive: #ef4444;
+  --destructive-foreground: #f9fafb;
+  --border: #e5e7eb;
+  --input: #e5e7eb;
+  --ring: #6b7280;
+  --chart-1: #ef4444;
+  --chart-2: #22c55e;
+  --chart-3: #06b6d4;
+  --chart-4: #6366f1;
+  --chart-5: #d946ef;
+  --radius: 0.5rem;
+  --sidebar: #f9fafb;
+  --sidebar-foreground: #111827;
+  --sidebar-primary: #111827;
+  --sidebar-primary-foreground: #f9fafb;
+  --sidebar-accent: #f3f4f6;
+  --sidebar-accent-foreground: #737373;
+  --sidebar-border: #e5e7eb;
+  --sidebar-ring: #6b7280;
+  --bg-card-primary: #ffffff78;
+  --bg-modal-primary: #e8ffd3;
+}
+
+.dark {
+  --background: #1B1B1B;
+  --foreground: #F5F5F5;
+  --card: #0a0a0a;
+  --card-foreground: #f9fafb;
+  --popover: #0a0a0a;
+  --popover-foreground: #f9fafb;
+  /* Updated primary to red color */
+  --primary: #FFD93D;
+  --primary-foreground: #0a0a0a;
+  --secondary: #FF70A6;
+  --secondary-foreground: #f9fafb;
+  --muted: #262626;
+  --muted-foreground: #9ca3af;
+  /* Updated accent to gold color */
+  --accent: #4CC9F0;
+  --accent-foreground: #0a0a0a;
+  --destructive: #dc2626;
+  --destructive-foreground: #f9fafb;
+  --border: #262626;
+  --input: #262626;
+  /* Updated ring to red color */
+  --ring: #ef4444;
+  --chart-1: #dc2626;
+  --chart-2: #f59e0b;
+  --chart-3: #22d3ee;
+  --chart-4: #3b82f6;
+  --chart-5: #e879f9;
+  --sidebar: #0a0a0a;
+  --sidebar-foreground: #f9fafb;
+  /* Updated sidebar primary to red color */
+  --sidebar-primary: #ef4444;
+  --sidebar-primary-foreground: #0a0a0a;
+  /* Updated sidebar accent to gold color */
+  --sidebar-accent: #f59e0b;
+  --sidebar-accent-foreground: #0a0a0a;
+  --sidebar-border: #262626;
+  /* Updated sidebar ring to red color */
+  --sidebar-ring: #ef4444;
+
+  --bg-card-primary: #00000044;
+  --bg-modal-primary: #292929;
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-card-primary: var(--bg-card-primary);
+  --color-modal-primary: var(--bg-modal-primary);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  
+  /* Mobile base font size */
+  @media (max-width: 768px) {
+    html {
+      font-size: 12px; /* Base font size for mobile */
+    }
+  }
+  
+  /* Tablet and desktop base font size */
+  @media (min-width: 769px) {
+    html {
+      font-size: 16px; /* Standard base font size */
+    }
+  }
+}
+
+/* Added custom animations for cyberpunk effects */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes matrix-rain {
+  0% {
+    transform: translateY(-100vh);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+.float-animation {
+  animation: float 3s ease-in-out infinite;
+}
+
+.matrix-effect {
+  animation: matrix-rain 3s linear infinite;
+}
+
+/* Updated gradient backgrounds to use red/gold colors */
+.cyber-gradient {
+  background: linear-gradient(
+    135deg,
+    #0a0a0a 0%,
+    #141414 25%,
+    #0a0a0a 50%,
+    #1f1f1f 75%,
+    #0a0a0a 100%
+  );
+}
+
+/* Updated neon glow to use red color */
+.neon-glow {
+  box-shadow: 0 0 20px #ef4444;
+}
+
+/* Updated accent glow to use gold color */
+.accent-glow {
+  box-shadow: 0 0 20px #f59e0b;
+}
+
+
+
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) var(--rb-rot, rotate(0deg)); }
+  50% { transform: translateY(-8px) var(--rb-rot, rotate(0deg)); }
+}
+
+/* Modal scale animations */
+@keyframes modalScaleIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes modalScaleOut {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+}
+
+/* Image scale animation for gallery items */
+@keyframes imageClickScale {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+    opacity: 0.2;
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(-40px) translateX(-10px);
+    opacity: 0.6;
+  }
+  75% {
+    transform: translateY(-20px) translateX(10px);
+    opacity: 0.4;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(20, 184, 166, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(20, 184, 166, 0.6);
+  }
+}
