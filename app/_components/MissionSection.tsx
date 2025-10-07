@@ -17,7 +17,7 @@ export default function MissionSection() {
 				`/api/nft/holding?contract=${nftAddress}&wallet=${ownerAddress}`
 			)
 			const nftsHoldingJson = await nftsHoldingRes.json()
-			setCurrentHoldings(nftsHoldingJson)
+			setCurrentHoldings(nftsHoldingJson.data)
 		}
 		fetchData()
 
@@ -59,44 +59,46 @@ export default function MissionSection() {
 
 				{/* Character grid */}
 				<div className='grid grid-cols-2 md:grid-cols-4 gap-6 mb-8'>
-					{currentHoldings.map((collection, index) => (
-						<div
-							key={index}
-							className='group relative bg-slate-800/50 backdrop-blur-sm rounded-2xl p-4 border border-teal-400/20 hover:border-teal-400/60 transition-all hover:scale-105 hover:shadow-xl hover:shadow-teal-500/20'>
+					{currentHoldings &&
+						currentHoldings.length > 0 &&
+						currentHoldings.map((collection, index) => (
 							<div
-								className={`aspect-square bg-gradient-to-br rounded-xl mb-4 flex items-center justify-center text-6xl font-black text-white/20 relative overflow-hidden`}>
-								<Image
-									src={collection.image || '/placeholder.svg'}
-									alt={collection.name}
-									fill
-									className='object-cover'
-									sizes='(max-width: 768px) 50vw, 25vw'
-								/>
+								key={index}
+								className='group relative bg-slate-800/50 backdrop-blur-sm rounded-2xl p-4 border border-teal-400/20 hover:border-teal-400/60 transition-all hover:scale-105 hover:shadow-xl hover:shadow-teal-500/20'>
+								<div
+									className={`aspect-square bg-gradient-to-br rounded-xl mb-4 flex items-center justify-center text-6xl font-black text-white/20 relative overflow-hidden`}>
+									<Image
+										src={collection.image || '/placeholder.svg'}
+										alt={collection.name}
+										fill
+										className='object-cover'
+										sizes='(max-width: 768px) 50vw, 25vw'
+									/>
+								</div>
+								<div className='flex items-center justify-between'>
+									<span className='text-slate-300 font-semibold'>
+										{collection.name}
+									</span>
+									<Link
+										href={collection.openseaLink || ''}
+										target='_blank'
+										rel='noopener noreferrer'>
+										<svg
+											className='w-4 h-4 text-slate-500 group-hover:text-teal-400 transition-colors'
+											fill='none'
+											stroke='currentColor'
+											viewBox='0 0 24 24'>
+											<path
+												strokeLinecap='round'
+												strokeLinejoin='round'
+												strokeWidth={2}
+												d='M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14'
+											/>
+										</svg>
+									</Link>
+								</div>
 							</div>
-							<div className='flex items-center justify-between'>
-								<span className='text-slate-300 font-semibold'>
-									{collection.name}
-								</span>
-								<Link
-									href={collection.openseaLink || ''}
-									target='_blank'
-									rel='noopener noreferrer'>
-									<svg
-										className='w-4 h-4 text-slate-500 group-hover:text-teal-400 transition-colors'
-										fill='none'
-										stroke='currentColor'
-										viewBox='0 0 24 24'>
-										<path
-											strokeLinecap='round'
-											strokeLinejoin='round'
-											strokeWidth={2}
-											d='M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14'
-										/>
-									</svg>
-								</Link>
-							</div>
-						</div>
-					))}
+						))}
 				</div>
 
 				{/* Mystery card */}
