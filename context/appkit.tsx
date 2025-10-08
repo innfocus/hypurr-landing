@@ -29,6 +29,23 @@ const hyperliquidNetwork = defineChain({
 	caipNetworkId: 'eip155:999',
 })
 
+const hyperliquidTestnetNetwork = defineChain({
+	id: 998,
+	name: 'Hyperliquid EVM',
+	nativeCurrency: {
+		name: 'HYPE',
+		symbol: 'HYPE',
+		decimals: 18,
+	},
+	rpcUrls: {
+		default: {
+			http: ['https://rpc.hyperliquid-testnet.xyz/evm'],
+		},
+	},
+	chainNamespace: 'eip155',
+	caipNetworkId: 'eip155:998',
+})
+
 const reownMetadata = {
 	name: 'CloneX',
 	description:

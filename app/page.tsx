@@ -10,6 +10,8 @@ import { useEffect, useState } from 'react'
 import HowItWorksSection from './_components/HowItWorksSection'
 import Footer from './_components/Footer'
 import { NFTResult } from './api/nft/cheapest/route'
+import { SwapModal } from '../components/SwapModal'
+import { useSwapModal } from '../context/swap-modal-context'
 
 export default function HomePage() {
 	const [selectedImage, setSelectedImage] = useState<string | null>(null)
@@ -42,6 +44,8 @@ export default function HomePage() {
 		fetchData()
 	}, [nftAddress])
 
+	const { isOpen, closeModal } = useSwapModal()
+
 	return (
 		<div className='min-h-screen bg-gradient-to-br from-slate-900 via-teal-900 to-slate-900'>
 			<Header />
@@ -54,6 +58,8 @@ export default function HomePage() {
 			</main>
 			<Footer />
 			<ImageModal image={selectedImage} onClose={() => setSelectedImage(null)} />
+
+			<SwapModal isOpen={isOpen} onClose={closeModal} />
 		</div>
 	)
 }

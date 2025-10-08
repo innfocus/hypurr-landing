@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server'
 import { getNFTCheapest, saveNFTCheapest } from '../../../../db/nftCheapest'
 
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic'
+
 export type NFTResult = {
 	name: string | null
 	image: string | null

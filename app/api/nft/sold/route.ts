@@ -1,3 +1,8 @@
+import { NextResponse } from 'next/server'
+
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic'
+
 export interface SoldNFT {
 	name: string
 	description: string | null
@@ -12,7 +17,6 @@ export interface SoldNFT {
 	openseaLink: string | null
 }
 
-import { NextResponse } from 'next/server'
 import { getNFTSold, saveNFTSold } from '../../../../db/nftSold'
 
 const OWNER = process.env.NEXT_PUBLIC_OWNER_ADDRESS

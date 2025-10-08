@@ -16,7 +16,7 @@ html {
   --card-foreground: #111827;
   --popover: #f9fafb;
   --popover-foreground: #111827;
-  --primary: #F6C445;
+  --primary: #46ecd5;
   --primary-foreground: #f9fafb;
   --secondary: #FFB3C6;
   --secondary-foreground: #737373;
@@ -55,7 +55,7 @@ html {
   --popover: #0a0a0a;
   --popover-foreground: #f9fafb;
   /* Updated primary to red color */
-  --primary: #FFD93D;
+  --primary: #46ecd5;
   --primary-foreground: #0a0a0a;
   --secondary: #FF70A6;
   --secondary-foreground: #f9fafb;

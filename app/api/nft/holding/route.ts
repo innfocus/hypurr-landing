@@ -2,6 +2,9 @@
 import { NextResponse } from 'next/server'
 import { getNFTHolding, saveNFTHolding } from '../../../../db/nftHolding'
 
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic'
+
 export interface NFTData {
 	name: string
 	description: string | null

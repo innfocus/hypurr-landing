@@ -1,8 +1,16 @@
 import { useEffect, useState } from 'react'
-import { shortenEthDynamic } from '../../utils/utils'
+import { shortenEthAddress, shortenEthDynamic } from '../../utils/utils'
+import { useAppKit, useAppKitAccount } from '@reown/appkit/react'
+import { Button } from '../../components/ui/button'
+import { useSwapModal } from '../../context/swap-modal-context'
 
 export default function Header() {
 	const [currentPrice, setCurrentPrice] = useState(0.0)
+
+	const { open } = useAppKit()
+
+	const { address, isConnected } = useAppKitAccount()
+	const { openModal } = useSwapModal()
 
 	const tokenAddress = process.env.NEXT_PUBLIC_TOKEN_ADDRESS
 
@@ -36,11 +44,26 @@ export default function Header() {
 						<span className='text-teal-400 text-sm'>
 							${shortenEthDynamic(currentPrice.toString(), 4)}
 						</span>
-						<span className='px-2 py-0.5 bg-teal-600 text-white text-xs font-semibold rounded'>
+						<button
+							className='px-2 py-0.5 bg-teal-600 text-white text-xs font-semibold rounded cursor-pointer'
+							onClick={() => openModal()}>
 							BUY
-						</span>
+						</button>
 					</div>
 				</div>
+				{isConnected ? (
+					<Button
+						className='text-foreground transition-colors cursor-pointer border border-primary/20 px-2 py-1 rounded-md text-sm font-semibold bg-transparent'
+						onClick={() => open()}>
+						{shortenEthAddress(address || '')}
+					</Button>
+				) : (
+					<Button
+						className='px-6 py-2 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-lg font-medium hover:shadow-lg hover:shadow-teal-500/50 transition-all cursor-pointer'
+						onClick={() => open()}>
+						Connect Wallet
+					</Button>
+				)}
 			</div>
 		</header>
 	)
