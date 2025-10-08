@@ -1,36 +1,36 @@
 version: "3.8"
 
 services:
-    # app:
-    #     build:
-    #         context: .
-    #         dockerfile: Dockerfile
-    #     ports:
-    #         - "3070:3070"
-    #     env_file:
-    #         - .env
-    #     restart: always
-    #     logging:
-    #         driver: "json-file"
-    #         options:
-    #             max-size: "10m"
-    #             max-file: "3"
-    #     networks:
-    #         - mkf-network
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - "3080:3000"
+        env_file:
+            - .env
+        restart: always
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "10m"
+                max-file: "3"
+        networks:
+            - hypurr-network
     redis:
         image: redis:8.2.1
         container_name: hypurr-redis
         restart: always
         ports:
-            - "6479:6379"
+            - "6579:6379"
         volumes:
             - redis_data:/data
-        # networks:
-        #     - mkf-network
+        networks:
+            - hypurr-network
 
-# networks:
-#     mkf-network:
-#         driver: bridge
+networks:
+    hypurr-network:
+        driver: bridge
 
 volumes:
     redis_data:

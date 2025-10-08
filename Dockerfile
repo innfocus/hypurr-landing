@@ -20,5 +20,5 @@ ENV NODE_ENV=production
 # copy everything từ builder, bao gồm node_modules
 COPY --from=builder /usr/src/app ./
 
-EXPOSE 3070
+EXPOSE 3000
 CMD ["npm", "start"]
