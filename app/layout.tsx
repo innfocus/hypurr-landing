@@ -45,7 +45,7 @@ export default function RootLayout({
 			<body className={`font-sans ${font.className} antialiased relative`}>
 				<AppKitContext>
 					<SwapModalProvider>
-						<ThemeProvider attribute='class' defaultTheme='light' enableSystem={false}>
+						<ThemeProvider attribute='class' defaultTheme='dark' enableSystem={false}>
 							<div className='relative z-10'>
 								<Suspense fallback={null}>{children}</Suspense>
 							</div>
