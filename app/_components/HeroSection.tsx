@@ -134,7 +134,7 @@ export default function Hero() {
 				</p>
 
 				{/* CTA Buttons */}
-				<div
+				{/* <div
 					className={`flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 transition-all duration-1000 delay-700 ${
 						isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
 					}`}>
@@ -147,7 +147,7 @@ export default function Hero() {
 						<div className='absolute inset-0 bg-gradient-to-r from-teal-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
 						<span className='relative z-10'>View Collection</span>
 					</button>
-				</div>
+				</div> */}
 
 				{/* Stats row */}
 				<div className='grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto'>

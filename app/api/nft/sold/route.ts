@@ -9,6 +9,7 @@ export interface SoldNFT {
 	tokenId: string
 	transactionHash: string
 	blockTimestamp: string
+	openseaLink: string | null
 }
 
 import { NextResponse } from 'next/server'
@@ -25,11 +26,11 @@ export async function GET(request: Request) {
 		if (force) {
 			const soldNFTs = await fetchSoldNFTs()
 			if (!soldNFTs || soldNFTs.length === 0) {
-				return NextResponse.json({ sold: [], message: '⚠️ No sold NFTs fetched' })
+				return NextResponse.json({ data: [], message: '⚠️ No sold NFTs fetched' })
 			}
 			await saveNFTSold(soldNFTs)
 			return NextResponse.json({
-				sold: soldNFTs,
+				data: soldNFTs,
 				message: '✅ Fresh data fetched and cache updated',
 			})
 		}
@@ -48,7 +49,7 @@ export async function GET(request: Request) {
 			console.log(soldNFTs)
 			sold = soldNFTs || []
 			return NextResponse.json({
-				sold,
+				data: sold,
 				message: '✅ Fetched fresh data (cache empty or expired)',
 			})
 		}
@@ -56,7 +57,7 @@ export async function GET(request: Request) {
 		sold = cached
 
 		return NextResponse.json({
-			sold,
+			data: sold,
 			message: '✅ Fetched data from cache',
 		})
 	} catch (err) {
@@ -66,71 +67,48 @@ export async function GET(request: Request) {
 }
 
 export async function fetchSoldNFTs(): Promise<SoldNFT[]> {
+	const API_KEY = process.env.NEXT_PUBLIC_OPENSEA_API_KEY || 'demo-api-key'
+	const slug = process.env.NFT_SLUG || ''
+
 	const res = await fetch(
-		`https://deep-index.moralis.io/api/v2.2/wallets/${OWNER}/nfts/trades?chain=eth&limit=25&nft_metadata=true`,
-		{
-			headers: {
-				'X-API-Key': process.env.NEXT_MORALIS_API_KEY || '',
-				Accept: 'application/json',
-			},
-		}
+		`https://api.opensea.io/api/v2/events/accounts/${OWNER}?event_type=sale&chain=hyperevm`,
+		{ headers: { 'x-api-key': API_KEY } }
 	)
 	if (!res.ok) {
-		throw new Error(`Moralis API error: ${res.status}`)
+		throw new Error(` API error: ${res.status}`)
 	}
 	const data = await res.json()
-	let soldNfts = (data.result || []).filter(
+	let soldNfts = (data.asset_events || []).filter(
 		(item: any) =>
-			item.seller_address?.toLowerCase() === OWNER?.toLowerCase() &&
-			item.token_address?.toLowerCase() === COLLECTION?.toLowerCase()
+			item.seller?.toLowerCase() === OWNER?.toLowerCase() &&
+			item.nft?.contract?.toLowerCase() === COLLECTION?.toLowerCase()
 	)
-
-	// filter transaction duplicated - keep the one with minimum price
-	const uniqueTransactions = new Map()
-
-	soldNfts.forEach((item: any) => {
-		const hash = item.transaction_hash
-		const price = parseFloat(item.price_formatted)
-
-		if (
-			!uniqueTransactions.has(hash) ||
-			price < parseFloat(uniqueTransactions.get(hash).price_formatted)
-		) {
-			uniqueTransactions.set(hash, item)
-		}
-	})
-
-	soldNfts = Array.from(uniqueTransactions.values())
 
 	//Map data with boughtPrice and soldPrice
 	const finalData = soldNfts.map((sold: any) => {
-		const tokenId = sold.token_ids[0]
+		const tokenId = sold.nft?.identifier
 
-		const boughtTxs = (data.result || []).filter(
-			(t: any) =>
-				t.buyer_address.toLowerCase() === OWNER?.toLowerCase() &&
-				t.token_address.toLowerCase() === COLLECTION?.toLowerCase() &&
-				t.token_ids[0] === tokenId
-		)
-
-		const boughtTx = boughtTxs
-			.filter((t: any) => new Date(t.block_timestamp) < new Date(sold.block_timestamp))
-			.sort(
-				(a: any, b: any) =>
-					new Date(b.block_timestamp).getTime() - new Date(a.block_timestamp).getTime()
-			)[0]
+		const name = sold.nft?.name
+		const description = sold.nft?.description
+		const attributes = null
+		const buyer = sold.buyer
+		const soldPrice = Number(sold.payment.quantity) / 10 ** (sold.payment.decimals || 18)
+		const boughtPrice = null
+		const image = sold.nft?.image_url
+		const transactionHash = sold.transaction
 
 		return {
-			name: sold.metadata?.name || '',
-			description: sold.metadata?.description || null,
-			attributes: sold.metadata?.attributes || [],
-			buyer: sold.buyer_address || null,
-			soldPrice: sold.price_formatted || null,
-			boughtPrice: boughtTx ? boughtTx.price_formatted : null,
-			image: sold.metadata?.image || null,
+			name: name || '',
+			description: description || null,
+			attributes: attributes || [],
+			buyer: buyer || null,
+			soldPrice: soldPrice || null,
+			boughtPrice: boughtPrice || null,
+			image: image || null,
 			tokenId: tokenId,
-			transactionHash: sold.transaction_hash,
-			blockTimestamp: sold.block_timestamp,
+			transactionHash: transactionHash,
+			blockTimestamp: sold.event_timestamp,
+			openseaLink: sold.nft?.opensea_url || null,
 		} as SoldNFT
 	})
 

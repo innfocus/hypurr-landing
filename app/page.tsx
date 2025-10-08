@@ -47,7 +47,7 @@ export default function HomePage() {
 			<Header />
 			<main className='pt-16'>
 				<HeroSection />
-				<MissionSection />
+				<MissionSection cheapestNft={cheapestNft} />
 				<HowItWorksSection />
 				<DeepKittySection />
 				<HowToBuySection />
