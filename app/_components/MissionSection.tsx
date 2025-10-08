@@ -161,15 +161,17 @@ export default function MissionSection({ cheapestNft }: MissionSectionProps) {
 											</svg>
 										</Link>
 									</div>
-									<div className='text-slate-500 text-sm'>
-										{'listingPrice' in collection
-											? `Listed for: ${shortenEthBalance(
-													collection.listingPrice || '0'
-											  )} HYPE`
-											: `Sold for: ${shortenEthBalance(
-													(collection as SoldNFT).soldPrice || '0'
-											  )} HYPE`}
-									</div>
+									{(tab === 'listing' || tab === 'sold') && (
+										<div className='text-slate-500 text-sm'>
+											{'listingPrice' in collection
+												? `Listed for: ${shortenEthBalance(
+														collection.listingPrice || '0'
+												  )} HYPE`
+												: `Sold for: ${shortenEthBalance(
+														(collection as SoldNFT).soldPrice || '0'
+												  )} HYPE`}
+										</div>
+									)}
 								</div>
 							)
 						})}
