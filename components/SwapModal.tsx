@@ -19,6 +19,8 @@ import {
 	UniversalRouterContract,
 } from '../contract/universal-router/universalRouterInteraction'
 import { toast } from '@/hooks/use-toast'
+import { ETH_TOKEN } from '../contract/eth_token/ethTokenData'
+import { TOKEN_INFO } from '../contract/token/tokenData'
 
 interface SwapModalProps {
 	isOpen: boolean
@@ -38,7 +40,6 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 	const { fetchBalance } = useAppKitBalance()
 
 	const { walletProvider } = useAppKitProvider('eip155')
-	const [hooks, setHooks] = useState<string | undefined>()
 
 	const quoteContract = new QuoterContract()
 
@@ -50,7 +51,6 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 		if (isConnected) {
 			fetchBalance().then(({ data }) => setBalance(data?.balance))
 			fetchBalanceToken()
-			fetchHookAddress()
 		}
 	}, [isConnected, address])
 
@@ -68,39 +68,36 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 
 		try {
 			const amountNumber = parseFloat(fromAmount)
-			if (amountNumber <= 0 || !hooks) {
+			if (amountNumber <= 0) {
 				setToAmount('')
 				return
 			} else {
 				if (activeTab === 'buy') {
-					getQuoteFromEthToToken({ amount: fromAmount, hooks })
+					getQuoteFromEthToToken({ amount: fromAmount })
 				} else {
-					getQuoteFromTokenToEth({ amount: fromAmount, hooks })
+					getQuoteFromTokenToEth({ amount: fromAmount })
 				}
 			}
 		} catch (error) {}
-	}, [isConnected, fromAmount, hooks])
+	}, [isConnected, fromAmount])
 
-	const getQuoteFromEthToToken = async ({ amount, hooks }: { amount: string; hooks: string }) => {
+	const getQuoteFromEthToToken = async ({ amount }: { amount: string }) => {
 		try {
-			const quote = await quoteContract.getExactAmountIn({
-				amountIn: amount,
-				hooks,
-				zeroForOne: true,
-			})
-
-			setToAmount(quote)
+			const result = await fetch(
+				`https://liqd.ag/api/swap/quote?inputToken=${ETH_TOKEN.address}&outputToken=${TOKEN_INFO.address}&amount=${amount}&slippage=1&multiHop=true`
+			)
+			const data = await result.json()
+			setToAmount(data.amountOut)
 		} catch (error) {
 			console.error('Error getting quote:', error)
 			setToAmount('0')
 		}
 	}
 
-	const getQuoteFromTokenToEth = async ({ amount, hooks }: { amount: string; hooks: string }) => {
+	const getQuoteFromTokenToEth = async ({ amount }: { amount: string }) => {
 		try {
 			const quote = await quoteContract.getExactAmountIn({
 				amountIn: amount,
-				hooks,
 				zeroForOne: false,
 			})
 
@@ -126,7 +123,6 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 	const fetchHookAddress = async () => {
 		if (walletProvider && isConnected) {
 			const hookAddress = await tokenUtils.getHookAddress()
-			setHooks(hookAddress)
 			universalRouterRef.current = await createUniversalRouterContract(
 				walletProvider,
 				hookAddress
@@ -168,7 +164,7 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 			// For buy: check if ETH amount exceeds ETH balance
 			const ethBalance = parseFloat(balance || '0')
 			if (amountNumber > ethBalance) {
-				return `Insufficient ETH balance`
+				return `Insufficient HYPE balance`
 			}
 		} else {
 			// For sell: check if MKFSTR amount exceeds MKFSTR balance
@@ -432,7 +428,7 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 						Balance:{' '}
 						{activeTab === 'buy'
 							? `${shortenTokenBalance(tokenBalance || '0')} HYPSTR`
-							: `${shortenEthBalance(balance || '0')} ETH`}
+							: `${shortenEthBalance(balance || '0')} HYPE`}
 					</div>
 				</div>
 

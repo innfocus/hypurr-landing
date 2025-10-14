@@ -49,26 +49,21 @@ export class QuoterContract {
 
 	async getExactAmountIn({
 		amountIn,
-		hooks,
 		zeroForOne,
 	}: {
 		amountIn: string
-		hooks: string
 		zeroForOne: boolean
 	}): Promise<string> {
 		try {
-			const currentConfig = this.getSwapExactInSingle({
-				amountIn,
-				hooks,
-				zeroForOne,
+			const quotedAmount = await this.contract.quoteExactInputSingle.staticCall({
+				tokenIn: '0x0000000000000000000000000000000000000000',
+				tokenOut: TOKEN_INFO.address,
+				amountIn: parseUnits(amountIn, ETH_TOKEN.decimals),
+				fee: 100,
+				sqrtPriceLimitX96: 0,
 			})
 
-			const quotedAmount = await this.contract.quoteExactInputSingle.staticCall({
-				poolKey: currentConfig.poolKey,
-				zeroForOne: currentConfig.zeroForOne,
-				exactAmount: currentConfig.amountIn,
-				hookData: currentConfig.hookData,
-			})
+			console.log('quotedAmount', quotedAmount)
 
 			return formatUnits(quotedAmount.amountOut, TOKEN_INFO.decimals)
 		} catch (error) {

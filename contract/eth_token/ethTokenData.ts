@@ -7,6 +7,6 @@ export const ETH_TOKEN = new Token(
 	isMainnet ? ChainId.MAINNET : ChainId.SEPOLIA,
 	ETH_TOKEN_ADDRESS,
 	18,
-	'ETH',
-	'Ether'
+	'HYPE',
+	'Hype'
 )
