@@ -3,7 +3,13 @@ import { Contract, formatUnits, JsonRpcProvider, parseUnits } from 'ethers'
 import { RPC_URL } from '../../constants/constants'
 import { ETH_TOKEN } from '../eth_token/ethTokenData'
 import { TOKEN_INFO } from '../token/tokenData'
-import { QUOTER_ABI, QUOTER_ADDRESS } from './quoter_data'
+
+import routerABI from "../abi/hyperswap_router_V2.json";
+const ROUTER_ADDRESS = process.env.NEXT_PUBLIC_V2_ROUTER_ADDRESS || ''
+
+// Token Addresses
+const TOKEN_ADDRESS = process.env.NEXT_PUBLIC_TOKEN_ADDRESS || ''
+const WETH_ADDRESS = "0x5555555555555555555555555555555555555555";
 
 export interface QuoterInteraction {
 	getExactAmountIn: (amountIn: string, hooks: string, zeroForOne: boolean) => Promise<string>
@@ -21,7 +27,7 @@ export class QuoterContract {
 
 	constructor() {
 		const provider = new JsonRpcProvider(RPC_URL)
-		this.contract = new Contract(QUOTER_ADDRESS, QUOTER_ABI, provider)
+		this.contract = new Contract(ROUTER_ADDRESS, routerABI.abi, provider)
 	}
 
 	getSwapExactInSingle({
@@ -55,17 +61,16 @@ export class QuoterContract {
 		zeroForOne: boolean
 	}): Promise<string> {
 		try {
-			const quotedAmount = await this.contract.quoteExactInputSingle.staticCall({
-				tokenIn: '0x0000000000000000000000000000000000000000',
-				tokenOut: TOKEN_INFO.address,
-				amountIn: parseUnits(amountIn, ETH_TOKEN.decimals),
-				fee: 100,
-				sqrtPriceLimitX96: 0,
-			})
+			const amountInParsed = parseUnits(amountIn, 18);
+			let path;
+			if (zeroForOne) {
+				path = [WETH_ADDRESS, TOKEN_ADDRESS];
+			} else {
+				path = [TOKEN_ADDRESS, WETH_ADDRESS];
+			}
 
-			console.log('quotedAmount', quotedAmount)
-
-			return formatUnits(quotedAmount.amountOut, TOKEN_INFO.decimals)
+			const amounts = await this.contract.getAmountsOut(amountInParsed, path);
+			return formatUnits(amounts[1], 18);
 		} catch (error) {
 			console.error('Error getting exact amount in:', error)
 			return '0'

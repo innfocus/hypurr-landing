@@ -14,13 +14,10 @@ import { shortenEthBalance, shortenTokenBalance } from '../utils/utils'
 import { tokenUtils } from '../contract/token/tokenInteraction'
 import { QuoterContract } from '../contract/quoter/quoter_interaction'
 import Image from 'next/image'
-import {
-	createUniversalRouterContract,
-	UniversalRouterContract,
-} from '../contract/universal-router/universalRouterInteraction'
+
 import { toast } from '@/hooks/use-toast'
-import { ETH_TOKEN } from '../contract/eth_token/ethTokenData'
-import { TOKEN_INFO } from '../contract/token/tokenData'
+import { BrowserProvider, Eip1193Provider } from 'ethers'
+import { swapETHForToken, swapTokenForETH } from '../contract/hyperswap_swap_functions'
 
 interface SwapModalProps {
 	isOpen: boolean
@@ -42,8 +39,6 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 	const { walletProvider } = useAppKitProvider('eip155')
 
 	const quoteContract = new QuoterContract()
-
-	const universalRouterRef = useRef<UniversalRouterContract | null>(null)
 
 	const { selectedNetworkId } = useAppKitState()
 
@@ -78,16 +73,23 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 					getQuoteFromTokenToEth({ amount: fromAmount })
 				}
 			}
-		} catch (error) {}
+		} catch (error) { }
 	}, [isConnected, fromAmount])
 
 	const getQuoteFromEthToToken = async ({ amount }: { amount: string }) => {
 		try {
-			const result = await fetch(
-				`https://liqd.ag/api/swap/quote?inputToken=${ETH_TOKEN.address}&outputToken=${TOKEN_INFO.address}&amount=${amount}&slippage=1&multiHop=true`
-			)
-			const data = await result.json()
-			setToAmount(data.amountOut)
+			const quote = await quoteContract.getExactAmountIn({
+				amountIn: amount,
+				zeroForOne: true,
+			})
+
+			setToAmount(quote)
+
+			// const result = await fetch(
+			// 	`https://liqd.ag/api/swap/quote?inputToken=${ETH_TOKEN.address}&outputToken=${TOKEN_INFO.address}&amount=${amount}&slippage=1&multiHop=true`
+			// )
+			// const data = await result.json()
+			// setToAmount(data.amountOut)
 		} catch (error) {
 			console.error('Error getting quote:', error)
 			setToAmount('0')
@@ -117,16 +119,6 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 				console.error('Error fetching token balance:', error)
 				setTokenBalance('0')
 			}
-		}
-	}
-
-	const fetchHookAddress = async () => {
-		if (walletProvider && isConnected) {
-			const hookAddress = await tokenUtils.getHookAddress()
-			universalRouterRef.current = await createUniversalRouterContract(
-				walletProvider,
-				hookAddress
-			)
 		}
 	}
 
@@ -196,17 +188,17 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 		setIsLoading(true)
 		try {
 			if (activeTab === 'buy') {
-				// Handle buy logic: ETH to CLXSTR via Universal Router
-				const router = universalRouterRef.current
-				if (!router) throw new Error('Router not initialized yet')
-				const tx = await router.executeSwapZeroForOne({
-					amountIn: fromAmount,
-					amountOutMinimum: toAmount || '0',
-				})
+				// Handle buy logic: ETH to Token via Router
+				const provider = new BrowserProvider(walletProvider as Eip1193Provider)
+				const signer = await provider.getSigner()
+
+				const tx = await swapETHForToken(provider, signer, toAmount, address, fromAmount);
+				console.log("Swap ETH → TOKEN completed!");
+
 				// Optional: await tx.wait()
 				toast({
 					title: 'Swap successful',
-					description: 'Transaction id: ' + tx.hash,
+					description: 'Transaction id: ' + tx!.hash,
 					variant: 'default',
 				})
 
@@ -220,15 +212,15 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 				// close modal
 				onClose()
 			} else {
-				const router = universalRouterRef.current
-				if (!router) throw new Error('Router not initialized yet')
-				const tx = await router.executeSwapOneForZero({
-					amountIn: fromAmount,
-					amountOutMinimum: toAmount || '0',
-				})
+				const provider = new BrowserProvider(walletProvider as Eip1193Provider)
+				const signer = await provider.getSigner()
+				const slippageTolerance = 10; // 10% slippage
+				const tx = await swapTokenForETH(provider, signer, fromAmount, slippageTolerance, address);
+				console.log("Swap TOKEN → ETH completed!");
+
 				toast({
 					title: 'Swap successful',
-					description: 'Transaction id: ' + tx.hash,
+					description: 'Transaction id: ' + tx!.hash,
 					variant: 'default',
 				})
 
@@ -278,21 +270,19 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 					<div className='flex'>
 						<Button
 							variant={activeTab === 'buy' ? 'default' : 'ghost'}
-							className={`flex-1 mr-2 cursor-pointer ${
-								activeTab === 'buy'
-									? 'bg-primary hover:bg-primary/80 text-white'
-									: 'bg-secondary-foreground hover:bg-secondary-foreground/80 text-background hover:text-background dark:hover:bg-foreground'
-							}`}
+							className={`flex-1 mr-2 cursor-pointer ${activeTab === 'buy'
+								? 'bg-primary hover:bg-primary/80 text-white'
+								: 'bg-secondary-foreground hover:bg-secondary-foreground/80 text-background hover:text-background dark:hover:bg-foreground'
+								}`}
 							onClick={() => handleTabChange('buy')}>
 							Buy
 						</Button>
 						<Button
 							variant={activeTab === 'sell' ? 'default' : 'ghost'}
-							className={`flex-1 cursor-pointer ${
-								activeTab === 'sell'
-									? 'bg-primary hover:bg-primary/80 text-white'
-									: 'bg-secondary-foreground hover:bg-secondary-foreground/80 text-background hover:text-background dark:hover:bg-foreground'
-							}`}
+							className={`flex-1 cursor-pointer ${activeTab === 'sell'
+								? 'bg-primary hover:bg-primary/80 text-white'
+								: 'bg-secondary-foreground hover:bg-secondary-foreground/80 text-background hover:text-background dark:hover:bg-foreground'
+								}`}
 							onClick={() => handleTabChange('sell')}>
 							Sell
 						</Button>
@@ -319,11 +309,10 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 							placeholder='0.0'
 							value={fromAmount}
 							onChange={(e) => handleFromAmountChange(e.target.value)}
-							className={`flex-1 bg-background border-gray-700 dark:border-gray-600 text-forg placeholder:text-gray-500 ${
-								validationError
-									? 'border-red-500 focus:border-red-500'
-									: 'focus:border-red-500'
-							}`}
+							className={`flex-1 bg-background border-gray-700 dark:border-gray-600 text-forg placeholder:text-gray-500 ${validationError
+								? 'border-red-500 focus:border-red-500'
+								: 'focus:border-red-500'
+								}`}
 						/>
 						<Button
 							variant='outline'
@@ -435,21 +424,20 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 				{/* Action Button */}
 				<Button
 					onClick={handleSwap}
-					className={`w-full font-medium py-3 rounded-xl ${
-						validationError
-							? 'bg-gray-500 hover:bg-gray-500 cursor-not-allowed'
-							: 'bg-primary hover:bg-primary/80'
-					} text-white`}
+					className={`w-full font-medium py-3 rounded-xl ${validationError
+						? 'bg-gray-500 hover:bg-gray-500 cursor-not-allowed'
+						: 'bg-primary hover:bg-primary/80'
+						} text-white`}
 					disabled={!fromAmount || !toAmount || isLoading || !!validationError}>
 					{isLoading
 						? 'Processing...'
 						: validationError
-						? 'Insufficient Balance'
-						: !fromAmount || !toAmount
-						? 'Enter an amount'
-						: activeTab === 'buy'
-						? 'Buy HYPSTR'
-						: 'Sell HYPSTR'}
+							? 'Insufficient Balance'
+							: !fromAmount || !toAmount
+								? 'Enter an amount'
+								: activeTab === 'buy'
+									? 'Buy HYPSTR'
+									: 'Sell HYPSTR'}
 				</Button>
 			</div>
 		</div>
