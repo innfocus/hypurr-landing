@@ -42,8 +42,8 @@
 		"@uniswap/router-sdk": "file:packages/uniswap-router-sdk-1.0.0.tgz",
 		"@uniswap/sdk-core": "^7.7.2",
 		"@uniswap/universal-router-sdk": "file:packages/uniswap-universal-router-sdk-1.0.0.tgz",
-		"@uniswap/v4-sdk": "file:packages/uniswap-v4-sdk-1.0.0.tgz",
 		"@uniswap/v2-sdk": "^4.15.2",
+		"@uniswap/v4-sdk": "file:packages/uniswap-v4-sdk-1.0.0.tgz",
 		"@vercel/analytics": "latest",
 		"autoprefixer": "^10.4.20",
 		"class-variance-authority": "^0.7.1",
@@ -68,6 +68,7 @@
 		"tailwind-merge": "^2.5.5",
 		"tailwindcss-animate": "^1.0.7",
 		"vaul": "^0.9.9",
+		"viem": "^2.38.2",
 		"zod": "3.25.67"
 	},
 	"devDependencies": {
