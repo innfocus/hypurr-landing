@@ -1,12 +1,11 @@
-import { ChainId, Token } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { isMainnet } from '../../constants/constants'
 
-// import { ChainId, Token } from '@uniswap/sdk-core'
 export const TOKEN_ADDRESS =
 	process.env.NEXT_PUBLIC_TOKEN_ADDRESS || '0x0000000000000000000000000000000000000000'
 
 export const TOKEN_INFO = new Token(
-	isMainnet ? ChainId.MAINNET : ChainId.SEPOLIA,
+	isMainnet ? 999 : 998,
 	TOKEN_ADDRESS,
 	18,
 	'HYPSTR',
