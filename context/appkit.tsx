@@ -3,11 +3,12 @@
 import { EthersAdapter } from '@reown/appkit-adapter-ethers'
 import {
 	defineChain,
-	// hyperliquidEvmTestnet,
+	hyperliquidEvmTestnet,
 } from '@reown/appkit/networks'
 import { AppKitProvider } from '@reown/appkit/react'
 
 const reownid = process.env.NEXT_PUBLIC_REOWN_PROJECT_ID
+const IS_MAINNET = process.env.NEXT_PUBLIC_IS_MAINNET === 'true'
 
 const hyperliquidNetwork = defineChain({
 	id: 999,
@@ -40,10 +41,11 @@ export function AppKitContext({ children }: { children: React.ReactNode }) {
 		<AppKitProvider
 			adapters={[new EthersAdapter()]}
 			metadata={reownMetadata}
-			networks={[hyperliquidNetwork]}
+			networks={[IS_MAINNET ? hyperliquidNetwork : hyperliquidEvmTestnet]}
 			projectId={reownid || ''}
 			chainImages={{
 				999: '/hyper_liquid_icon.svg',
+				998: '/hyper_liquid_icon.svg',
 			}}
 			features={{
 				analytics: true,

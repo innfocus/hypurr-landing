@@ -15,7 +15,7 @@ const getRouterContract = (provider: any) => {
 
 // Token Addresses
 const TOKEN_ADDRESS = process.env.NEXT_PUBLIC_TOKEN_ADDRESS || ''
-const WETH_ADDRESS = "0x5555555555555555555555555555555555555555";
+const WETH_ADDRESS = process.env.NEXT_PUBLIC_WETH_ADDRESS || ''
 
 // Swap ETH for TOKEN (Buy)
 async function swapETHForToken(provider: BrowserProvider, signer: JsonRpcSigner, amountOutMin: string, to: string | undefined, ethAmount: string) {

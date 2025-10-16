@@ -9,7 +9,7 @@ const ROUTER_ADDRESS = process.env.NEXT_PUBLIC_V2_ROUTER_ADDRESS || ''
 
 // Token Addresses
 const TOKEN_ADDRESS = process.env.NEXT_PUBLIC_TOKEN_ADDRESS || ''
-const WETH_ADDRESS = "0x5555555555555555555555555555555555555555";
+const WETH_ADDRESS = process.env.NEXT_PUBLIC_WETH_ADDRESS || ''
 
 export interface QuoterInteraction {
 	getExactAmountIn: (amountIn: string, hooks: string, zeroForOne: boolean) => Promise<string>
