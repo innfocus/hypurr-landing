@@ -4,7 +4,7 @@ import React, { useEffect, useRef, memo } from 'react'
 function TradingViewWidget() {
 	const tokenAddress = process.env.NEXT_PUBLIC_TOKEN_ADDRESS
 	return (
-		<div style={{ position: 'relative', width: '100%', height: '500px' }}>
+		<div style={{ position: 'relative', width: '100%', height: '600px' }}>
 			<iframe
 				id='geckoterminal-embed'
 				title='GeckoTerminal Embed'

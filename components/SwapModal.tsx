@@ -73,7 +73,7 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 					getQuoteFromTokenToEth({ amount: fromAmount })
 				}
 			}
-		} catch (error) { }
+		} catch (error) {}
 	}, [isConnected, fromAmount])
 
 	const getQuoteFromEthToToken = async ({ amount }: { amount: string }) => {
@@ -192,8 +192,8 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 				const provider = new BrowserProvider(walletProvider as Eip1193Provider)
 				const signer = await provider.getSigner()
 
-				const tx = await swapETHForToken(provider, signer, toAmount, address, fromAmount);
-				console.log("Swap ETH → TOKEN completed!");
+				const tx = await swapETHForToken(provider, signer, toAmount, address, fromAmount)
+				console.log('Swap ETH → TOKEN completed!')
 
 				// Optional: await tx.wait()
 				toast({
@@ -214,9 +214,15 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 			} else {
 				const provider = new BrowserProvider(walletProvider as Eip1193Provider)
 				const signer = await provider.getSigner()
-				const slippageTolerance = 10; // 10% slippage
-				const tx = await swapTokenForETH(provider, signer, fromAmount, slippageTolerance, address);
-				console.log("Swap TOKEN → ETH completed!");
+				const slippageTolerance = 10 // 10% slippage
+				const tx = await swapTokenForETH(
+					provider,
+					signer,
+					fromAmount,
+					slippageTolerance,
+					address
+				)
+				console.log('Swap TOKEN → ETH completed!')
 
 				toast({
 					title: 'Swap successful',
@@ -265,24 +271,26 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 				{/* Header */}
 				<div className='flex items-center justify-between mb-6'>
 					<h2 className='text-2xl font-semibold text-foreground'>
-						{activeTab === 'buy' ? 'Buy $HYPSTR' : 'Sell $HYPSTR'}
+						{activeTab === 'buy' ? 'Buy $HYRSTR' : 'Sell $HYPSTR'}
 					</h2>
 					<div className='flex'>
 						<Button
 							variant={activeTab === 'buy' ? 'default' : 'ghost'}
-							className={`flex-1 mr-2 cursor-pointer ${activeTab === 'buy'
-								? 'bg-primary hover:bg-primary/80 text-white'
-								: 'bg-secondary-foreground hover:bg-secondary-foreground/80 text-background hover:text-background dark:hover:bg-foreground'
-								}`}
+							className={`flex-1 mr-2 cursor-pointer ${
+								activeTab === 'buy'
+									? 'bg-primary hover:bg-primary/80 text-white'
+									: 'bg-secondary-foreground hover:bg-secondary-foreground/80 text-background hover:text-background dark:hover:bg-foreground'
+							}`}
 							onClick={() => handleTabChange('buy')}>
 							Buy
 						</Button>
 						<Button
 							variant={activeTab === 'sell' ? 'default' : 'ghost'}
-							className={`flex-1 cursor-pointer ${activeTab === 'sell'
-								? 'bg-primary hover:bg-primary/80 text-white'
-								: 'bg-secondary-foreground hover:bg-secondary-foreground/80 text-background hover:text-background dark:hover:bg-foreground'
-								}`}
+							className={`flex-1 cursor-pointer ${
+								activeTab === 'sell'
+									? 'bg-primary hover:bg-primary/80 text-white'
+									: 'bg-secondary-foreground hover:bg-secondary-foreground/80 text-background hover:text-background dark:hover:bg-foreground'
+							}`}
 							onClick={() => handleTabChange('sell')}>
 							Sell
 						</Button>
@@ -309,10 +317,11 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 							placeholder='0.0'
 							value={fromAmount}
 							onChange={(e) => handleFromAmountChange(e.target.value)}
-							className={`flex-1 bg-background border-gray-700 dark:border-gray-600 text-forg placeholder:text-gray-500 ${validationError
-								? 'border-red-500 focus:border-red-500'
-								: 'focus:border-red-500'
-								}`}
+							className={`flex-1 bg-background border-gray-700 dark:border-gray-600 text-forg placeholder:text-gray-500 ${
+								validationError
+									? 'border-red-500 focus:border-red-500'
+									: 'focus:border-red-500'
+							}`}
 						/>
 						<Button
 							variant='outline'
@@ -424,20 +433,21 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 				{/* Action Button */}
 				<Button
 					onClick={handleSwap}
-					className={`w-full font-medium py-3 rounded-xl ${validationError
-						? 'bg-gray-500 hover:bg-gray-500 cursor-not-allowed'
-						: 'bg-primary hover:bg-primary/80'
-						} text-white`}
+					className={`w-full font-medium py-3 rounded-xl ${
+						validationError
+							? 'bg-gray-500 hover:bg-gray-500 cursor-not-allowed'
+							: 'bg-primary hover:bg-primary/80'
+					} text-white`}
 					disabled={!fromAmount || !toAmount || isLoading || !!validationError}>
 					{isLoading
 						? 'Processing...'
 						: validationError
-							? 'Insufficient Balance'
-							: !fromAmount || !toAmount
-								? 'Enter an amount'
-								: activeTab === 'buy'
-									? 'Buy HYPSTR'
-									: 'Sell HYPSTR'}
+						? 'Insufficient Balance'
+						: !fromAmount || !toAmount
+						? 'Enter an amount'
+						: activeTab === 'buy'
+						? 'Buy HYPSTR'
+						: 'Sell HYPSTR'}
 				</Button>
 			</div>
 		</div>

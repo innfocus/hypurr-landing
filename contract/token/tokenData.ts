@@ -4,13 +4,7 @@ import { isMainnet } from '../../constants/constants'
 export const TOKEN_ADDRESS =
 	process.env.NEXT_PUBLIC_TOKEN_ADDRESS || '0x0000000000000000000000000000000000000000'
 
-export const TOKEN_INFO = new Token(
-	isMainnet ? 999 : 998,
-	TOKEN_ADDRESS,
-	18,
-	'HYPSTR',
-	'HYPSTR'
-)
+export const TOKEN_INFO = new Token(isMainnet ? 999 : 998, TOKEN_ADDRESS, 18, 'HYRSTR', 'HYRSTR')
 
 export const TOKEN_ABI = [
 	{

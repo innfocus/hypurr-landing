@@ -7,6 +7,8 @@ export default function Hero() {
 	const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
 	const [isVisible, setIsVisible] = useState(false)
 	const [selectedImage, setSelectedImage] = useState<string | null>(null)
+	const [rowCount, setRowCount] = useState(5)
+	const [isMobile, setIsMobile] = useState(false)
 
 	const backgroundImages = [
 		'/background/1.avif',
@@ -46,13 +48,13 @@ export default function Hero() {
 
 	useEffect(() => {
 		// tốc độ chung cho toàn bộ các hàng
-		const commonSpeed = 35
+		const commonSpeed = 100
 
-		const newRows = Array.from({ length: 5 }).map((_, i) => ({
+		const newRows = Array.from({ length: rowCount }).map((_, i) => ({
 			id: i,
 			images: shuffleArray(backgroundImages),
 			direction: i % 2 === 0 ? 'left' : 'right', // so le hướng
-			speed: commonSpeed + Math.random() * 10,
+			speed: commonSpeed,
 			delay: i * 0.2,
 		})) as {
 			id: number
@@ -62,8 +64,21 @@ export default function Hero() {
 			delay: number
 		}[]
 
+		console.log(newRows)
+
 		setRows(newRows)
 		setIsVisible(true)
+	}, [rowCount])
+
+	useEffect(() => {
+		const updateRowCount = () => {
+			const mobile = window.innerWidth < 640 // tailwind sm breakpoint
+			setIsMobile(mobile)
+			setRowCount(mobile ? 4 : 5)
+		}
+		updateRowCount()
+		window.addEventListener('resize', updateRowCount)
+		return () => window.removeEventListener('resize', updateRowCount)
 	}, [])
 
 	useEffect(() => {
@@ -83,17 +98,17 @@ export default function Hero() {
 	}, [])
 
 	return (
-		<section className='relative min-h-screen flex items-center justify-center overflow-hidden pt-20'>
+		<section className='relative h-dvh flex items-center justify-center overflow-hidden'>
 			{/* Background grid */}
-			<div className='absolute inset-0 overflow-hidden z-20'>
+			<div className='absolute inset-0 overflow-hidden z-20 mt-24 mx-auto'>
 				{rows.map((row, rowIndex) => (
 					<div
 						key={row.id}
 						className='absolute flex opacity-0'
 						style={{
-							top: `${12 + rowIndex * 16}%`,
-							height: '14%',
-							width: `${150 + rowIndex * 50}%`,
+							top: isMobile ? `${8 + rowIndex * 18}%` : `${rowIndex * 20}%`,
+							height: isMobile ? '12%' : '14%',
+							width: isMobile ? `${120 + rowIndex * 50}%` : `${150 + rowIndex * 50}%`,
 							animation: `
 								fadeInUp 1s ease-out forwards,
 								scroll-${row.direction} ${row.speed}s linear infinite
@@ -103,12 +118,12 @@ export default function Hero() {
 							animationTimingFunction: 'linear',
 						}}>
 						{/* multiple duplicated sets for seamless scroll */}
-						{Array.from({ length: 3 }).map((_, duplicateIndex) => (
+						{[...row.images, ...row.images].map((_, duplicateIndex) => (
 							<div key={duplicateIndex} className='flex items-center'>
 								{row.images.map((image, imageIndex) => (
 									<div
 										key={`${duplicateIndex}-${imageIndex}`}
-										className='relative group cursor-pointer flex-shrink-0 w-[80px] h-[80px] sm:w-[100px] sm:h-[100px] md:w-[160px] md:h-[100px] lg:w-[180px] lg:h-[180px] mr-4 sm:mr-6 md:mr-10'
+										className='relative group cursor-pointer flex-shrink-0 w-[100px] h-[100px] sm:w-[100px] sm:h-[100px] md:w-[160px] md:h-[100px] lg:w-[200px] lg:h-[200px] mr-4 sm:mr-6 md:mr-10'
 										onClick={(e) => {
 											e.preventDefault()
 											e.stopPropagation()
@@ -169,7 +184,7 @@ export default function Hero() {
 			</div>
 
 			{/* Main content */}
-			<div className='relative z-30 max-w-7xl mx-auto px-6 text-center'>
+			<div className='relative z-30 max-w-7xl mx-auto px-6 text-center p-4 backdrop-blur-xs rounded-2xl'>
 				<div
 					className={`inline-flex items-center space-x-2 px-4 py-2 bg-teal-500/10 border border-teal-400/30 rounded-full mb-8 backdrop-blur-sm transition-all duration-1000 ${
 						isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
@@ -213,7 +228,7 @@ export default function Hero() {
 					<span className='text-teal-400 font-semibold'>Earn while you sleep.</span>
 				</p>
 
-				<div className='flex justify-center mt-12 animate-bounce'>
+				<div className='absolute -bottom-4 sm:-bottom-24 left-0 right-0 z-30 flex justify-center animate-bounce '>
 					<button
 						onClick={() => {
 							const missionSection = document.getElementById('mission')

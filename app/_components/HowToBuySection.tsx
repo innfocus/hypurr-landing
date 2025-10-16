@@ -23,7 +23,7 @@ export default function HowToBuySection() {
 					How to Buy
 				</h2>
 				<p className='text-center text-slate-400 text-lg mb-20'>
-					Follow those steps to purchase $HYPSTR tokens
+					Follow those steps to purchase $HYRSTR tokens
 				</p>
 
 				<div className='space-y-8'>

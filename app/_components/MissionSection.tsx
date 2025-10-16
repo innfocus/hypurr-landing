@@ -6,11 +6,7 @@ import { NFTResult } from '../api/nft/cheapest/route'
 import { SoldNFT } from '../api/nft/sold/route'
 import { shortenEthBalance } from '../../utils/utils'
 
-interface MissionSectionProps {
-	cheapestNft: NFTResult | null
-}
-
-export default function MissionSection({ cheapestNft }: MissionSectionProps) {
+export default function MissionSection() {
 	const [currentHoldings, setCurrentHoldings] = useState<NFTData[]>([])
 	const [nftsList, setNftsList] = useState<NFTData[] | SoldNFT[]>([])
 	const [soldNfts, setSoldNfts] = useState<SoldNFT[]>([])
@@ -21,7 +17,7 @@ export default function MissionSection({ cheapestNft }: MissionSectionProps) {
 	const tokenAddress = process.env.NEXT_PUBLIC_TOKEN_ADDRESS
 	const ownerAddress = process.env.NEXT_PUBLIC_OWNER_ADDRESS
 
-	const [tab, setTab] = useState('all')
+	const [tab, setTab] = useState('holding')
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -53,16 +49,31 @@ export default function MissionSection({ cheapestNft }: MissionSectionProps) {
 		setTimeout(() => {
 			let results: NFTData[] | SoldNFT[] = []
 
-			if (tab === 'all') {
+			if (tab === 'holding') {
 				results = currentHoldings || []
-			}
-
-			if (tab === 'listing') {
-				results = (currentHoldings || []).filter((nft) => nft.type === 'listing')
-			}
-
-			if (tab === 'vault') {
-				results = (currentHoldings || []).filter((nft) => nft.type === 'sale')
+				// order by listing first, and price
+				results.sort((a, b) => {
+					if (a.type === 'listing' && b.type !== 'listing') {
+						return -1
+					}
+					if (a.type !== 'listing' && b.type === 'listing') {
+						return 1
+					}
+					return 0
+				})
+				// then sort by price
+				results.sort((a, b) => {
+					if (a.listingPrice && b.listingPrice) {
+						return parseFloat(b.listingPrice) - parseFloat(a.listingPrice)
+					}
+					if (a.listingPrice && !b.listingPrice) {
+						return -1
+					}
+					if (!a.listingPrice && b.listingPrice) {
+						return 1
+					}
+					return 0
+				})
 			}
 
 			if (tab === 'sold') {
@@ -96,12 +107,12 @@ export default function MissionSection({ cheapestNft }: MissionSectionProps) {
 				</p>
 
 				{/* Rarity tabs */}
-				<div className='flex justify-center gap-2 mb-12'>
-					{['All', 'Listing', 'Vault', 'Sold'].map((tabName: string) => (
+				<div className='flex justify-center gap-6 mb-12'>
+					{['Holding', 'Sold'].map((tabName: string) => (
 						<button
 							key={tabName}
 							onClick={() => setTab(tabName.toLowerCase())}
-							className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+							className={`px-6 py-3 rounded-lg font-semibold transition-all w-full cursor-pointer ${
 								tab === tabName.toLowerCase()
 									? 'bg-teal-500 text-white'
 									: 'bg-slate-800/50 text-slate-400 hover:bg-slate-800 hover:text-white'
@@ -130,7 +141,14 @@ export default function MissionSection({ cheapestNft }: MissionSectionProps) {
 											: 'opacity-0 translate-y-8 scale-95'
 									}`}>
 									<div
-										className={`aspect-square bg-gradient-to-br rounded-xl mb-4 flex items-center justify-center text-6xl font-black text-white/20 relative overflow-hidden`}>
+										className={` aspect-square bg-gradient-to-br rounded-xl mb-4 flex items-center justify-center text-6xl font-black text-white/20 relative overflow-hidden`}>
+										{tab === 'holding' && (
+											<span className='absolute top-2 right-2 bg-teal-500 z-20 text-white text-xs px-2 py-1 rounded-2xl'>
+												{(collection as NFTData).type === 'listing'
+													? 'Listing'
+													: 'Vault'}
+											</span>
+										)}
 										<Image
 											src={collection.image || '/placeholder.svg'}
 											alt={collection.name}
@@ -161,9 +179,11 @@ export default function MissionSection({ cheapestNft }: MissionSectionProps) {
 											</svg>
 										</Link>
 									</div>
-									{(tab === 'listing' || tab === 'sold') && (
+									{((tab === 'holding' &&
+										(collection as NFTData).type === 'listing') ||
+										tab === 'sold') && (
 										<div className='text-slate-500 text-sm'>
-											{'listingPrice' in collection
+											{tab === 'holding' && 'listingPrice' in collection
 												? `Listed for: ${shortenEthBalance(
 														collection.listingPrice || '0'
 												  )} HYPE`
@@ -178,29 +198,6 @@ export default function MissionSection({ cheapestNft }: MissionSectionProps) {
 				</div>
 
 				{/* Mystery card */}
-				<div className='max-w-xs mx-auto'>
-					<div className='relative bg-slate-800/50 backdrop-blur-sm rounded-2xl p-4 border border-teal-400/20 hover:scale-105 hover:shadow-xl hover:shadow-teal-500/20 transition-all duration-700 ease-out'>
-						<div className='aspect-square bg-gradient-to-br from-slate-700 to-slate-800 rounded-xl mb-4 flex items-center justify-center relative overflow-hidden'>
-							{cheapestNft && (
-								<div
-									className='absolute inset-0 bg-cover bg-center blur-sm'
-									style={{
-										backgroundImage: `url(${cheapestNft.image})`,
-									}}></div>
-							)}
-							<div className='absolute inset-0 bg-gradient-to-br from-slate-700/80 to-slate-800/80'></div>
-							<div className='relative z-10 w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center text-slate-400 text-2xl font-bold'>
-								?
-							</div>
-						</div>
-						<div className='text-center'>
-							<span className='text-slate-400 text-sm'>??????</span>
-							<p className='text-xs text-slate-500 mt-1'>
-								444.69 HYPE until next purchase
-							</p>
-						</div>
-					</div>
-				</div>
 			</div>
 		</section>
 	)

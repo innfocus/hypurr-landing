@@ -49,12 +49,9 @@ export default function HomePage() {
 	return (
 		<div className='min-h-screen bg-gradient-to-br from-slate-900 via-teal-900 to-slate-900'>
 			<Header />
-			<main className='pt-16'>
+			<main>
 				<HeroSection />
-				<MissionSection cheapestNft={cheapestNft} />
 				<HowItWorksSection />
-				<DeepKittySection />
-				<HowToBuySection />
 			</main>
 			<Footer />
 			<ImageModal image={selectedImage} onClose={() => setSelectedImage(null)} />

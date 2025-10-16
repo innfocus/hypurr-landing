@@ -4,7 +4,7 @@ export default function HowItWorks() {
 	const steps = [
 		{
 			icon: ShoppingCart,
-			title: '50% of each "sale" of $HYPSTR is diverted to the protocol to buy 8.5% sale to HYPE.',
+			title: '50% of each "sale" of $HYRSTR is diverted to the protocol to buy 8.5% sale to HYPE.',
 			step: '01',
 		},
 		{
@@ -19,13 +19,13 @@ export default function HowItWorks() {
 		},
 		{
 			icon: Wallet,
-			title: 'When the Hypurr is sold, all of the selling funds and excess $HYPSTR.',
+			title: 'When the Hypurr is sold, all of the selling funds and excess $HYRSTR.',
 			step: '04',
 		},
 	]
 
 	return (
-		<section className='relative py-32 px-6'>
+		<section className='relative py-32 px-6 '>
 			<div className='max-w-6xl mx-auto'>
 				<h2 className='text-5xl md:text-6xl font-black text-center mb-4 text-white'>
 					How It Works

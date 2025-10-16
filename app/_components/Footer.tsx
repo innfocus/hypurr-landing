@@ -8,7 +8,7 @@ export default function Footer() {
 					{/* Logo */}
 					<div className='flex items-center space-x-2'>
 						<div className='w-8 h-8 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-lg'></div>
-						<span className='text-xl font-bold text-white'>HYPSTR</span>
+						<span className='text-xl font-bold text-white'>HYRSTR</span>
 					</div>
 
 					{/* Links */}
@@ -50,4 +50,3 @@ export default function Footer() {
 		</footer>
 	)
 }
-  
