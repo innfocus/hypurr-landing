@@ -325,6 +325,10 @@ html {
 	}
 }
 
+.animate-fade-in-up {
+	animation: fadeInUp 0.8s ease-out;
+}
+
 @keyframes gradient {
 	0% {
 		background-position: 0% 50%;

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Sparkles, ChevronDown } from 'lucide-react'
+import { Sparkles, ChevronDown, ArrowRight } from 'lucide-react'
 import ImageModal from './ImageModal'
+import { Button } from '../../components/ui/button'
+import Link from 'next/link'
 
 export default function Hero() {
 	const [scrollY, setScrollY] = useState(0)
@@ -220,7 +222,7 @@ export default function Hero() {
 				</h1>
 
 				<p
-					className={`text-xl md:text-2xl text-slate-300 mb-12 max-w-3xl mx-auto leading-relaxed transition-all duration-1000 delay-500 ${
+					className={`text-xl md:text-2xl text-slate-300 mb-4 max-w-3xl mx-auto leading-relaxed transition-all duration-1000 delay-500 ${
 						isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
 					}`}>
 					An automated protocol designed for exposure to Hypurr. Active trade.
@@ -228,10 +230,31 @@ export default function Hero() {
 					<span className='text-teal-400 font-semibold'>Earn while you sleep.</span>
 				</p>
 
-				<div className='absolute -bottom-4 sm:-bottom-24 left-0 right-0 z-30 flex justify-center animate-bounce '>
+				<div className='flex flex-col sm:flex-row gap-4 justify-center items-center'>
+					<Link href='/app'>
+						<Button
+							size='lg'
+							className='bg-primary cursor-pointer hover:bg-primary/90 text-primary-foreground red-glow group animate-fade-in-up opacity-0'
+							style={{ animationDelay: '1.5s', animationFillMode: 'forwards' }}>
+							<span
+								className='animate-fade-in-up opacity-0'
+								style={{ animationDelay: '1.7s', animationFillMode: 'forwards' }}>
+								Go to App
+							</span>
+							<ArrowRight
+								className='h-4 w-4 group-hover:translate-x-1 transition-transform animate-fade-in-up opacity-0'
+								style={{ animationDelay: '1.9s', animationFillMode: 'forwards' }}
+							/>
+						</Button>
+					</Link>
+				</div>
+
+				<div
+					className='absolute -bottom-4 sm:-bottom-24 left-0 right-0 z-30 flex justify-center animate-bounce animate-fade-in-up opacity-0'
+					style={{ animationDelay: '2.2s', animationFillMode: 'forwards' }}>
 					<button
 						onClick={() => {
-							const missionSection = document.getElementById('mission')
+							const missionSection = document.getElementById('how-it-works')
 							if (missionSection)
 								missionSection.scrollIntoView({ behavior: 'smooth' })
 						}}

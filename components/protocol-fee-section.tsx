@@ -4,11 +4,12 @@ import { Card } from '@/components/ui/card'
 import { ChartContainer } from '@/components/ui/chart'
 import { useEffect, useState } from 'react'
 import { PieChart, Pie, Cell, Label } from 'recharts'
+import { shortenEthDynamic } from '../utils/utils'
 
 export function ProtocolFeeSection() {
 	const data = [
-		{ name: 'partA', value: 82, indicator: 3 },
-		{ name: 'partB', value: 18, indicator: 5 },
+		{ name: 'partA', value: 80, indicator: 80 },
+		{ name: 'partB', value: 20, indicator: 20 },
 	]
 
 	const renderOutsideLabel = (props: any) => {
@@ -17,7 +18,7 @@ export function ProtocolFeeSection() {
 		const x = cx + (outerRadius + 25) * Math.cos(-midAngle * RADIAN)
 		const y = cy + (outerRadius + 25) * Math.sin(-midAngle * RADIAN)
 		return (
-			<text x={x} y={y} dy={4} textAnchor={x > cx ? 'start' : 'end'} fill='#FFD93D'>
+			<text x={x} y={y} dy={4} textAnchor={x > cx ? 'start' : 'end'} fill='#27cbb5'>
 				{data[index].indicator}
 			</text>
 		)
@@ -31,7 +32,7 @@ export function ProtocolFeeSection() {
 	useEffect(() => {
 		const fetchData = async () => {
 			const tokenDataRes = await fetch(
-				`https://api.geckoterminal.com/api/v2/networks/eth/tokens/${tokenAddress}`
+				`https://api.geckoterminal.com/api/v2/networks/hyperevm/tokens/${tokenAddress}`
 			)
 			const tokenDataJson = await tokenDataRes.json()
 			setCurrentPrice(parseFloat(tokenDataJson.data.attributes.price_usd))
@@ -56,9 +57,9 @@ export function ProtocolFeeSection() {
 							</span>
 						</div>
 						<div className='text-center flex flex-col md:flex-row'>
-							<span className='text-muted-foreground mr-1'>$MKFSTR Price</span>
+							<span className='text-muted-foreground mr-1'>$HYRSTR Price</span>
 							<span className='font-bold text-primary'>
-								${currentPrice.toFixed(6)}
+								${shortenEthDynamic(currentPrice.toString(), 8)}
 							</span>
 						</div>
 					</div>
@@ -68,36 +69,32 @@ export function ProtocolFeeSection() {
 					<div className='flex flex-col items-center gap-6'>
 						<ChartContainer
 							className='aspect-square h-56 w-56'
-							config={{ partA: { color: '#FFD93D' }, partB: { color: '#F6C445' } }}>
+							config={{ partA: { color: '#46ecd5' }, partB: { color: '#27cbb5' } }}>
 							<PieChart>
 								<Pie
 									data={[
-										{ name: 'partA', value: 82 },
-										{ name: 'partB', value: 18 },
+										{ name: 'partA', value: 80 },
+										{ name: 'partB', value: 20 },
 									]}
 									outerRadius={90}
 									paddingAngle={0}
 									stroke='transparent'
 									dataKey='value'
-									labelLine={{ stroke: '#FFD93D', strokeWidth: 1, opacity: 0.8 }}
+									labelLine={{ stroke: '#27cbb5', strokeWidth: 1, opacity: 0.8 }}
 									label={renderOutsideLabel}>
 									<Cell fill='var(--color-partA)' />
 									<Cell fill='var(--color-partB)' />
 								</Pie>
 							</PieChart>
 						</ChartContainer>
-
-						<p className='text-foreground-200 text-sm md:text-base'>
-							Total fees collected: 504Ξ
-						</p>
 					</div>
 				</Card>
 
 				<div className='text-xs text-center mt-4 font-light'>
 					Fees on trades are used to power the accumulating machine, with 80% going to the
 					protocol and 20% going to the team. There is a minimum 10% fee on trades. All
-					ETH from Murakami.Flower sales is used to buy the token and burn it, moving the
-					ETH back into the LP.
+					HYPE from Hypur sales is used to buy the token and burn it, moving the HYPE back
+					into the LP.
 				</div>
 			</div>
 		</section>

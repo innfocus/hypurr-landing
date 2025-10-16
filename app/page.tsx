@@ -12,6 +12,7 @@ import Footer from './_components/Footer'
 import { NFTResult } from './api/nft/cheapest/route'
 import { SwapModal } from '../components/SwapModal'
 import { useSwapModal } from '../context/swap-modal-context'
+import { ProtocolFeeSection } from '../components/protocol-fee-section'
 
 export default function HomePage() {
 	const [selectedImage, setSelectedImage] = useState<string | null>(null)
@@ -52,6 +53,7 @@ export default function HomePage() {
 			<main>
 				<HeroSection />
 				<HowItWorksSection />
+				<ProtocolFeeSection />
 			</main>
 			<Footer />
 			<ImageModal image={selectedImage} onClose={() => setSelectedImage(null)} />

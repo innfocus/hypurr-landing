@@ -1,10 +1,16 @@
 // TradingViewWidget.jsx
-import React, { useEffect, useRef, memo } from 'react'
+import React, { useEffect, useRef, memo, useState } from 'react'
 
 function TradingViewWidget() {
 	const tokenAddress = process.env.NEXT_PUBLIC_TOKEN_ADDRESS
+	const [isMobile, setIsMobile] = useState(false)
+
+	useEffect(() => {
+		setIsMobile(window.innerWidth < 768)
+	}, [])
+
 	return (
-		<div style={{ position: 'relative', width: '100%', height: '600px' }}>
+		<div style={{ position: 'relative', width: '100%', height: isMobile ? '300px' : '600px' }}>
 			<iframe
 				id='geckoterminal-embed'
 				title='GeckoTerminal Embed'

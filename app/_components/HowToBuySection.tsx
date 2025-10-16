@@ -17,7 +17,7 @@ export default function HowToBuySection() {
 	]
 
 	return (
-		<section className='relative py-32 px-6'>
+		<section className='relative py-32 px-6' id='how-it-works'>
 			<div className='max-w-4xl mx-auto'>
 				<h2 className='text-5xl md:text-6xl font-black text-center mb-4 text-white'>
 					How to Buy
