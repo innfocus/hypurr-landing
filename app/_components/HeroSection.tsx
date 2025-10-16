@@ -1,14 +1,72 @@
-import { ArrowRight, Sparkles, ChevronDown } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { Sparkles, ChevronDown } from 'lucide-react'
+import ImageModal from './ImageModal'
 
 export default function Hero() {
 	const [scrollY, setScrollY] = useState(0)
 	const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
 	const [isVisible, setIsVisible] = useState(false)
+	const [selectedImage, setSelectedImage] = useState<string | null>(null)
+
+	const backgroundImages = [
+		'/background/1.avif',
+		'/background/2.avif',
+		'/background/3.avif',
+		'/background/4.avif',
+		'/background/5.avif',
+		'/background/6.avif',
+		'/background/7.avif',
+		'/background/8.avif',
+		'/background/9.avif',
+		'/background/10.avif',
+		'/background/11.avif',
+		'/background/12.avif',
+	]
+
+	// shuffle array
+	const shuffleArray = (array: string[]) => {
+		const shuffled = [...array]
+		for (let i = shuffled.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1))
+			;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+		}
+		return shuffled
+	}
+
+	// generate settings for each row (direction, speed, delay, images)
+	const [rows, setRows] = useState<
+		{
+			id: number
+			images: string[]
+			direction: 'left' | 'right'
+			speed: number
+			delay: number
+		}[]
+	>([])
 
 	useEffect(() => {
-		setIsVisible(true)
+		// tốc độ chung cho toàn bộ các hàng
+		const commonSpeed = 35
 
+		const newRows = Array.from({ length: 5 }).map((_, i) => ({
+			id: i,
+			images: shuffleArray(backgroundImages),
+			direction: i % 2 === 0 ? 'left' : 'right', // so le hướng
+			speed: commonSpeed + Math.random() * 10,
+			delay: i * 0.5,
+		})) as {
+			id: number
+			images: string[]
+			direction: 'left' | 'right'
+			speed: number
+			delay: number
+		}[]
+
+		setRows(newRows)
+		setIsVisible(true)
+	}, [])
+
+	useEffect(() => {
 		const handleScroll = () => setScrollY(window.scrollY)
 		const handleMouseMove = (e: MouseEvent) => {
 			setMousePosition({
@@ -16,10 +74,8 @@ export default function Hero() {
 				y: (e.clientY / window.innerHeight) * 2 - 1,
 			})
 		}
-
 		window.addEventListener('scroll', handleScroll)
 		window.addEventListener('mousemove', handleMouseMove)
-
 		return () => {
 			window.removeEventListener('scroll', handleScroll)
 			window.removeEventListener('mousemove', handleMouseMove)
@@ -28,23 +84,50 @@ export default function Hero() {
 
 	return (
 		<section className='relative min-h-screen flex items-center justify-center overflow-hidden pt-20'>
-			{/* Animated background grid */}
-			<div className='absolute inset-0 opacity-20'>
-				<div className='absolute inset-0 bg-gradient-to-b from-transparent via-teal-500/10 to-transparent'></div>
-				<div
-					className='absolute inset-0'
-					style={{
-						backgroundImage: `
-              linear-gradient(to right, rgba(20, 184, 166, 0.1) 1px, transparent 1px),
-              linear-gradient(to bottom, rgba(20, 184, 166, 0.1) 1px, transparent 1px)
-            `,
-						backgroundSize: '50px 50px',
-						transform: `translateY(${scrollY * 0.5}px)`,
-					}}></div>
+			{/* Background grid */}
+			<div className='absolute inset-0 overflow-hidden z-20'>
+				{rows.map((row, rowIndex) => (
+					<div
+						key={row.id}
+						className='absolute flex opacity-0'
+						style={{
+							top: `${12 + rowIndex * 16}%`,
+							height: '14%',
+							width: `${150 + rowIndex * 50}%`,
+							animation: `
+								fadeInUp 1s ease-out forwards,
+								scroll-${row.direction} ${row.speed}s linear infinite
+							`,
+							animationDelay: `${row.delay}s, ${row.delay + 1}s`,
+						}}>
+						{/* multiple duplicated sets for seamless scroll */}
+						{Array.from({ length: 3 }).map((_, duplicateIndex) => (
+							<div key={duplicateIndex} className='flex items-center'>
+								{row.images.map((image, imageIndex) => (
+									<div
+										key={`${duplicateIndex}-${imageIndex}`}
+										className='relative group cursor-pointer flex-shrink-0 w-[80px] h-[80px] sm:w-[100px] sm:h-[100px] md:w-[160px] md:h-[100px] lg:w-[180px] lg:h-[180px] mr-4 sm:mr-6 md:mr-10'
+										onClick={(e) => {
+											e.preventDefault()
+											e.stopPropagation()
+											setSelectedImage(image)
+										}}>
+										<img
+											src={image}
+											alt={`Background ${imageIndex + 1}`}
+											className='w-full h-full object-cover rounded-lg opacity-15 hover:opacity-70 transition-opacity duration-300 shadow-lg'
+										/>
+										<div className='absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300'></div>
+									</div>
+								))}
+							</div>
+						))}
+					</div>
+				))}
 			</div>
 
-			{/* Floating orbs with mouse interaction */}
-			<div className='absolute inset-0 overflow-hidden'>
+			{/* Floating orbs */}
+			<div className='absolute inset-0 overflow-hidden z-0'>
 				<div
 					className='absolute top-1/4 left-1/4 w-96 h-96 bg-teal-500/30 rounded-full blur-3xl animate-pulse transition-transform duration-1000 ease-out'
 					style={{
@@ -55,7 +138,6 @@ export default function Hero() {
 				<div
 					className='absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-500/30 rounded-full blur-3xl animate-pulse transition-transform duration-1000 ease-out'
 					style={{
-						animationDelay: '1s',
 						transform: `translate(${mousePosition.x * -20}px, ${
 							mousePosition.y * -20
 						}px)`,
@@ -63,7 +145,6 @@ export default function Hero() {
 				<div
 					className='absolute top-1/2 left-1/2 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl animate-pulse transition-transform duration-1000 ease-out'
 					style={{
-						animationDelay: '2s',
 						transform: `translate(${mousePosition.x * 40}px, ${
 							mousePosition.y * -25
 						}px)`,
@@ -85,9 +166,8 @@ export default function Hero() {
 				))}
 			</div>
 
-			{/* Content */}
-			<div className='relative z-10 max-w-7xl mx-auto px-6 text-center'>
-				{/* Badge */}
+			{/* Main content */}
+			<div className='relative z-30 max-w-7xl mx-auto px-6 text-center'>
 				<div
 					className={`inline-flex items-center space-x-2 px-4 py-2 bg-teal-500/10 border border-teal-400/30 rounded-full mb-8 backdrop-blur-sm transition-all duration-1000 ${
 						isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
@@ -98,7 +178,6 @@ export default function Hero() {
 					</span>
 				</div>
 
-				{/* Main heading with gradient and stagger animation */}
 				<h1 className='text-7xl md:text-8xl lg:text-9xl font-black mb-6 leading-none'>
 					<span
 						className={`block bg-gradient-to-r from-teal-300 via-cyan-300 to-emerald-300 bg-clip-text text-transparent transition-all duration-1000 delay-100 ${
@@ -108,7 +187,7 @@ export default function Hero() {
 							backgroundSize: '200% 200%',
 							animation: 'gradient 8s ease infinite',
 						}}>
-						Hypurr
+						HYR
 					</span>
 					<span
 						className={`block bg-gradient-to-r from-cyan-200 via-teal-200 to-cyan-300 bg-clip-text text-transparent mt-2 transition-all duration-1000 delay-300 ${
@@ -119,11 +198,10 @@ export default function Hero() {
 							animation: 'gradient 8s ease infinite',
 							animationDelay: '0.5s',
 						}}>
-						Go Burrr
+						Momentum
 					</span>
 				</h1>
 
-				{/* Subtitle */}
 				<p
 					className={`text-xl md:text-2xl text-slate-300 mb-12 max-w-3xl mx-auto leading-relaxed transition-all duration-1000 delay-500 ${
 						isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
@@ -133,58 +211,20 @@ export default function Hero() {
 					<span className='text-teal-400 font-semibold'>Earn while you sleep.</span>
 				</p>
 
-				{/* CTA Buttons */}
-				{/* <div
-					className={`flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 transition-all duration-1000 delay-700 ${
-						isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-					}`}>
-					<button className='group relative px-8 py-4 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-xl font-bold text-lg hover:shadow-2xl hover:shadow-teal-500/50 transition-all hover:scale-105 flex items-center space-x-2 overflow-hidden'>
-						<div className='absolute inset-0 bg-gradient-to-r from-cyan-500 to-teal-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
-						<span className='relative z-10'>Start Trading</span>
-						<ArrowRight className='relative z-10 w-5 h-5 group-hover:translate-x-1 transition-transform' />
-					</button>
-					<button className='group px-8 py-4 bg-slate-800/50 backdrop-blur-sm text-white rounded-xl font-bold text-lg border-2 border-teal-400/30 hover:border-teal-400 hover:bg-slate-800/80 transition-all hover:scale-105 relative overflow-hidden'>
-						<div className='absolute inset-0 bg-gradient-to-r from-teal-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
-						<span className='relative z-10'>View Collection</span>
-					</button>
-				</div> */}
-
-				{/* Stats row */}
-				<div className='grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto'>
-					{[
-						{ value: '1.5K+', label: 'Active Traders' },
-						{ value: '6.1K', label: 'HYPE Traded' },
-						{ value: '69.9M', label: 'Total Volume' },
-						{ value: '8.94', label: 'ETH Floor' },
-					].map((stat, index) => (
-						<div
-							key={index}
-							className={`group p-6 bg-slate-800/40 backdrop-blur-sm rounded-xl border border-teal-400/20 hover:border-teal-400/40 transition-all duration-700 hover:scale-105 hover:bg-slate-800/60 ${
-								isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-							}`}
-							style={{ transitionDelay: `${900 + index * 100}ms` }}>
-							<div className='text-3xl font-black text-teal-300 mb-1 group-hover:scale-110 transition-transform duration-300'>
-								{stat.value}
-							</div>
-							<div className='text-sm text-slate-400'>{stat.label}</div>
-						</div>
-					))}
-				</div>
-
-				{/* Scroll indicator */}
 				<div className='flex justify-center mt-12 animate-bounce'>
 					<button
 						onClick={() => {
 							const missionSection = document.getElementById('mission')
-							if (missionSection) {
+							if (missionSection)
 								missionSection.scrollIntoView({ behavior: 'smooth' })
-							}
 						}}
 						className='cursor-pointer hover:scale-110 transition-transform duration-200'>
 						<ChevronDown className='w-8 h-8 text-teal-400' />
 					</button>
 				</div>
 			</div>
+
+			<ImageModal image={selectedImage} onClose={() => setSelectedImage(null)} />
 		</section>
 	)
 }

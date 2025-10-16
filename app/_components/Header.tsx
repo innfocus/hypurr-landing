@@ -42,7 +42,7 @@ export default function Header() {
 					<h1 className='text-xl font-bold text-white tracking-wider'>$HYPSTR</h1>
 					<div className='flex items-center gap-2 bg-teal-900/30 px-3 py-1 rounded-full'>
 						<span className='text-teal-400 text-sm'>
-							${shortenEthDynamic(currentPrice.toString(), 4)}
+							${shortenEthDynamic(currentPrice.toString(), 8)}
 						</span>
 						<button
 							className='px-2 py-0.5 bg-teal-600 text-white text-xs font-semibold rounded cursor-pointer'
