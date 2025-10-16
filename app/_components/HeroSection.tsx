@@ -53,7 +53,7 @@ export default function Hero() {
 			images: shuffleArray(backgroundImages),
 			direction: i % 2 === 0 ? 'left' : 'right', // so le hướng
 			speed: commonSpeed + Math.random() * 10,
-			delay: i * 0.5,
+			delay: i * 0.2,
 		})) as {
 			id: number
 			images: string[]
@@ -98,7 +98,9 @@ export default function Hero() {
 								fadeInUp 1s ease-out forwards,
 								scroll-${row.direction} ${row.speed}s linear infinite
 							`,
-							animationDelay: `${row.delay}s, ${row.delay + 1}s`,
+							animationDelay: `${row.delay}s`,
+							willChange: 'transform',
+							animationTimingFunction: 'linear',
 						}}>
 						{/* multiple duplicated sets for seamless scroll */}
 						{Array.from({ length: 3 }).map((_, duplicateIndex) => (
