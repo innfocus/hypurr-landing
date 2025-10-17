@@ -11,6 +11,8 @@ import DeepKittySection from '../_components/DeepKittySection'
 import Footer from '../_components/Footer'
 import { tokenUtils } from '../../contract/token/tokenInteraction'
 import TradingChartSection from '../_components/TradingChartSection'
+import FloatingSpriteBackground from '../../components/floating-background'
+import StarfieldBackground from '../_components/StarfieldBackground'
 
 export default function AppPage() {
 	const [selectedImage, setSelectedImage] = useState<string | null>(null)
@@ -21,6 +23,9 @@ export default function AppPage() {
 		<div className='min-h-screen bg-gradient-to-br from-slate-900 via-teal-900 to-slate-900'>
 			<Header />
 			<main>
+				<div className='starfield-background'>
+					<StarfieldBackground />
+				</div>
 				<DeepKittySection />
 				<MissionSection />
 				<TradingChartSection />

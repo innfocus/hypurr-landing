@@ -10,7 +10,7 @@ import { toast } from '../../hooks/use-toast'
 export default function DeepKittySection() {
 	const nftAddress = process.env.NEXT_PUBLIC_NFT_ADDRESS
 
-	const [currentBalance, setCurrentBalance] = useState(0)
+	const [currentBalance, setCurrentBalance] = useState(100)
 	const [cheapestNft, setCheapestNft] = useState<NFTResult | null>(null)
 
 	const target = cheapestNft?.price || 0
@@ -34,13 +34,13 @@ export default function DeepKittySection() {
 	useEffect(() => {
 		const fetchData = async () => {
 			const balance = await tokenUtils.getBalance()
-			setCurrentBalance(parseFloat(balance))
+			// setCurrentBalance(parseFloat(balance))
 		}
 		fetchData()
 
 		const interval = setInterval(async () => {
 			const balance = await tokenUtils.getBalance()
-			setCurrentBalance(parseFloat(balance))
+			// setCurrentBalance(parseFloat(balance))
 		}, 10000)
 
 		return () => clearInterval(interval)
@@ -94,13 +94,13 @@ export default function DeepKittySection() {
 	return (
 		<section className='relative pt-32 px-6 mb-32'>
 			<div className='max-w-6xl mx-auto'>
-				<h2 className='text-5xl md:text-6xl font-black text-center mb-4 text-white'>
+				{/* <h2 className='text-5xl md:text-6xl font-black text-center mb-4 text-white'>
 					Deep Kitty Value
 				</h2>
-				<p className='text-center text-slate-400 text-lg mb-16'>Prrrrrr</p>
+				<p className='text-center text-slate-400 text-lg mb-16'>Prrrrrr</p> */}
 
 				{/* Cheapest NFT */}
-				<div className='bg-slate-800/50 backdrop-blur-sm rounded-2xl p-8 border border-teal-400/20 mb-12 mt-12'>
+				<div className='rounded-2xl p-8 mb-12'>
 					<div className='flex flex-col items-center justify-center mb-8'>
 						<h1 className='text-2xl font-bold text-center  text-white mb-2'>
 							Current Holding
@@ -161,15 +161,12 @@ export default function DeepKittySection() {
 								<div className='aspect-square bg-gradient-to-br from-slate-700 to-slate-800 rounded-xl mb-4 flex items-center justify-center relative overflow-hidden '>
 									{cheapestNft && (
 										<div
-											className='absolute inset-0 bg-cover bg-center blur-sm'
+											className='absolute inset-0 bg-cover bg-center'
 											style={{
 												backgroundImage: `url(${cheapestNft.image})`,
 											}}></div>
 									)}
 									<div className='absolute inset-0 bg-gradient-to-br from-slate-700/80 to-slate-800/80'></div>
-									<div className='relative z-10 w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center text-slate-400 text-2xl font-bold'>
-										?
-									</div>
 								</div>
 								<div className='text-center'>
 									<span className='text-slate-400 text-sm'>

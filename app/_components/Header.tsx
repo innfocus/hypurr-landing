@@ -54,7 +54,7 @@ export default function Header() {
 						</span>
 						{currentPath != '/' && (
 							<span className='px-2 py-0.5 bg-teal-600 text-white text-xs font-semibold rounded cursor-pointer'>
-								BUY
+								SWAP
 							</span>
 						)}
 					</button>

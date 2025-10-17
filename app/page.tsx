@@ -53,7 +53,6 @@ export default function HomePage() {
 			<main>
 				<HeroSection />
 				<HowItWorksSection />
-				<ProtocolFeeSection />
 			</main>
 			<Footer />
 			<ImageModal image={selectedImage} onClose={() => setSelectedImage(null)} />

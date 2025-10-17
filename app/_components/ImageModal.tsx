@@ -41,7 +41,7 @@ export default function ImageModal({ image, onClose }: ImageModalProps) {
 
 	return (
 		<div
-			className={`fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm transition-opacity duration-200 ${
+			className={`fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-xs transition-opacity duration-200 ${
 				isClosing ? 'opacity-0' : 'opacity-100'
 			}`}
 			onClick={handleClose}>

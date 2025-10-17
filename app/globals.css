@@ -10,7 +10,7 @@ html {
 }
 
 :root {
-  --background: #C7F2A4;
+  --background: rgb(199, 242, 164);
   --foreground: #222222;
   --card: #FFFFFF;
   --card-foreground: #111827;

@@ -17,7 +17,11 @@ import Image from 'next/image'
 
 import { toast } from '@/hooks/use-toast'
 import { BrowserProvider, Eip1193Provider } from 'ethers'
-import { swapETHForToken, swapTokenForETH } from '../contract/hyperswap_swap_functions'
+import {
+	calculateMaxSwap,
+	swapETHForToken,
+	swapTokenForETH,
+} from '../contract/hyperswap_swap_functions'
 
 interface SwapModalProps {
 	isOpen: boolean
@@ -41,6 +45,7 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 	const quoteContract = new QuoterContract()
 
 	const { selectedNetworkId } = useAppKitState()
+	const [maxSwap, setMaxSwap] = useState<number | undefined>()
 
 	useEffect(() => {
 		if (isConnected) {
@@ -54,6 +59,18 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 			fetchBalance().then(({ data }) => setBalance(data?.balance))
 		}
 	}, [selectedNetworkId])
+
+	// useEffect(() => {
+	// 	const fetchFee = async () => {
+	// 		if (walletProvider && isConnected) {
+	// 			const provider = new BrowserProvider(walletProvider as Eip1193Provider)
+	// 			const signer = await provider.getSigner()
+	// 			calculateMaxSwap(provider, signer, balance || '0')
+	// 		}
+	// 	}
+
+	// 	fetchFee()
+	// }, [walletProvider, isConnected])
 
 	useEffect(() => {
 		if (fromAmount.trim() == '') {
@@ -162,7 +179,7 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 			// For sell: check if MKFSTR amount exceeds MKFSTR balance
 			const tokenBalanceNum = parseFloat(tokenBalance || '0')
 			if (amountNumber > tokenBalanceNum) {
-				return `Insufficient MKFSTR balance`
+				return `Insufficient HYRSTR balance`
 			}
 		}
 
@@ -271,7 +288,7 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 				{/* Header */}
 				<div className='flex items-center justify-between mb-6'>
 					<h2 className='text-2xl font-semibold text-foreground'>
-						{activeTab === 'buy' ? 'Buy $HYRSTR' : 'Sell $HYPSTR'}
+						{activeTab === 'buy' ? 'Buy $HYRSTR' : 'Sell $HYRSTR'}
 					</h2>
 					<div className='flex'>
 						<Button
@@ -342,7 +359,7 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 										<div className='w-4 h-4 bg-purple-500 rounded-full flex items-center justify-center'>
 											<span className='text-xs font-bold text-white'>C</span>
 										</div>
-										<span>HYPSTR</span>
+										<span>HYRSTR</span>
 									</>
 								)}
 							</div>
@@ -352,7 +369,7 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 						Balance:{' '}
 						{activeTab === 'buy'
 							? `${shortenEthBalance(balance || '0')} HYPE`
-							: `${shortenTokenBalance(tokenBalance || '0')} $HYPSTR`}
+							: `${shortenTokenBalance(tokenBalance || '0')} $HYRSTR`}
 					</div>
 					{validationError && (
 						<div className='mt-2 text-sm text-red-400 flex items-center space-x-1'>
@@ -406,7 +423,7 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 										<div className='w-4 h-4 bg-purple-500 rounded-full flex items-center justify-center '>
 											<span className='text-xs font-bold text-white'>C</span>
 										</div>
-										<span>HYPSTR</span>
+										<span>HYRSTR</span>
 									</>
 								) : (
 									<>
@@ -425,7 +442,7 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 					<div className='text-sm text-gray-400 mt-1'>
 						Balance:{' '}
 						{activeTab === 'buy'
-							? `${shortenTokenBalance(tokenBalance || '0')} HYPSTR`
+							? `${shortenTokenBalance(tokenBalance || '0')} HYRSTR`
 							: `${shortenEthBalance(balance || '0')} HYPE`}
 					</div>
 				</div>
@@ -446,8 +463,8 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 						: !fromAmount || !toAmount
 						? 'Enter an amount'
 						: activeTab === 'buy'
-						? 'Buy HYPSTR'
-						: 'Sell HYPSTR'}
+						? 'Buy HYRSTR'
+						: 'Sell HYRSTR'}
 				</Button>
 			</div>
 		</div>

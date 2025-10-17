@@ -44,21 +44,22 @@ export default function HowItWorks() {
 									<div className='hidden lg:block absolute top-12 left-full w-full h-0.5 bg-gradient-to-r from-teal-400/50 to-transparent'></div>
 								)}
 
-								<div className='relative bg-slate-800/50 backdrop-blur-sm rounded-2xl p-8 border border-teal-400/20 hover:border-teal-400/60 transition-all hover:shadow-xl hover:shadow-teal-500/20'>
+								<div className='relative bg-slate-800/50 backdrop-blur-sm rounded-2xl px-8 py-4 border border-teal-400/20 hover:border-teal-400/60 transition-all hover:shadow-xl hover:shadow-teal-500/20 h-64 flex flex-col justify-between items-center'>
 									{/* Step number */}
-									<div className='absolute -top-4 -right-4 w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-xl flex items-center justify-center text-white font-black text-lg shadow-lg'>
+									<div className='absolute -top-4 right-0 left-0 mx-auto w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-xl flex items-center justify-center text-white font-black text-lg shadow-lg'>
 										{step.step}
 									</div>
 
 									{/* Icon */}
-									<div className='w-16 h-16 bg-gradient-to-br from-teal-500/20 to-cyan-500/20 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform'>
-										<Icon className='w-8 h-8 text-teal-400' />
-									</div>
 
 									{/* Description */}
-									<p className='text-slate-300 leading-relaxed text-sm'>
+									<p className='text-slate-300 leading-relaxed text-sm mt-6 font-bold'>
 										{step.title}
 									</p>
+
+									<div className='w-16 h-16 bg-gradient-to-br from-teal-500/20 to-cyan-500/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform'>
+										<Icon className='w-8 h-8 text-teal-400' />
+									</div>
 								</div>
 							</div>
 						)

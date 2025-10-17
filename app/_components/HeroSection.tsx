@@ -125,7 +125,7 @@ export default function Hero() {
 								{row.images.map((image, imageIndex) => (
 									<div
 										key={`${duplicateIndex}-${imageIndex}`}
-										className='relative group cursor-pointer flex-shrink-0 w-[100px] h-[100px] sm:w-[100px] sm:h-[100px] md:w-[160px] md:h-[100px] lg:w-[200px] lg:h-[200px] mr-4 sm:mr-6 md:mr-10'
+										className='relative group cursor-pointer flex-shrink-0 w-[100px] h-[100px] sm:w-[100px] sm:h-[100px] md:w-[160px] md:h-[100px] lg:w-[150px] lg:h-[150px] xl:w-[150px] xl:h-[150px] mr-4 sm:mr-6 md:mr-10'
 										onClick={(e) => {
 											e.preventDefault()
 											e.stopPropagation()
@@ -234,15 +234,15 @@ export default function Hero() {
 					<Link href='/app'>
 						<Button
 							size='lg'
-							className='bg-primary cursor-pointer hover:bg-primary/90 text-primary-foreground red-glow group animate-fade-in-up opacity-0'
+							className='bg-gradient-to-r from-teal-500 to-cyan-500 cursor-pointer text-primary-foreground red-glow group animate-fade-in-up opacity-0'
 							style={{ animationDelay: '1.5s', animationFillMode: 'forwards' }}>
 							<span
-								className='animate-fade-in-up opacity-0'
+								className='animate-fade-in-up opacity-0 text-white font-bold'
 								style={{ animationDelay: '1.7s', animationFillMode: 'forwards' }}>
 								Go to App
 							</span>
 							<ArrowRight
-								className='h-4 w-4 group-hover:translate-x-1 transition-transform animate-fade-in-up opacity-0'
+								className='h-4 w-4 group-hover:translate-x-1 transition-transform animate-fade-in-up opacity-0 text-white'
 								style={{ animationDelay: '1.9s', animationFillMode: 'forwards' }}
 							/>
 						</Button>

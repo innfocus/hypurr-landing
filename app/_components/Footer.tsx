@@ -43,7 +43,7 @@ export default function Footer() {
 				{/* Copyright */}
 				<div className='mt-8 pt-8 border-t border-teal-400/10 text-center'>
 					<p className='text-slate-500 text-sm'>
-						hypeRSTRRtl6mEXdxTQAUdQeQcGCvqZqctvZqw7dj6cz5c83G8qV
+						Copyright © 2025 HYRSTR. All rights reserved.
 					</p>
 				</div>
 			</div>
