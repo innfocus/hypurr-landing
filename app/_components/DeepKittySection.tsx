@@ -10,7 +10,7 @@ import { toast } from '../../hooks/use-toast'
 export default function DeepKittySection() {
 	const nftAddress = process.env.NEXT_PUBLIC_NFT_ADDRESS
 
-	const [currentBalance, setCurrentBalance] = useState(100)
+	const [currentBalance, setCurrentBalance] = useState(0)
 	const [cheapestNft, setCheapestNft] = useState<NFTResult | null>(null)
 
 	const target = cheapestNft?.price || 0
@@ -34,13 +34,13 @@ export default function DeepKittySection() {
 	useEffect(() => {
 		const fetchData = async () => {
 			const balance = await tokenUtils.getBalance()
-			// setCurrentBalance(parseFloat(balance))
+			setCurrentBalance(parseFloat(balance))
 		}
 		fetchData()
 
 		const interval = setInterval(async () => {
 			const balance = await tokenUtils.getBalance()
-			// setCurrentBalance(parseFloat(balance))
+			setCurrentBalance(parseFloat(balance))
 		}, 10000)
 
 		return () => clearInterval(interval)
