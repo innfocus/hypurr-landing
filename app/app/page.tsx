@@ -20,7 +20,7 @@ export default function AppPage() {
 	const { isOpen, closeModal } = useSwapModal()
 
 	return (
-		<div className='min-h-screen bg-gradient-to-br from-slate-900 via-teal-900 to-slate-900'>
+		<div className='min-h-screen  bg-slate-900'>
 			<Header />
 			<main>
 				<div className='starfield-background'>

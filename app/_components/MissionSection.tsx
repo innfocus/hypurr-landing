@@ -115,7 +115,7 @@ export default function MissionSection() {
 							className={`px-6 py-3 rounded-lg font-semibold transition-all w-full cursor-pointer ${
 								tab === tabName.toLowerCase()
 									? 'bg-teal-500 text-white'
-									: 'bg-slate-800/50 text-slate-400 hover:bg-slate-800 hover:text-white'
+									: 'bg-slate-800/70 text-slate-200 hover:bg-slate-800 hover:text-white'
 							}`}>
 							{tabName}
 						</button>

@@ -125,7 +125,7 @@ export default function Hero() {
 								{row.images.map((image, imageIndex) => (
 									<div
 										key={`${duplicateIndex}-${imageIndex}`}
-										className='relative group cursor-pointer flex-shrink-0 w-[100px] h-[100px] sm:w-[100px] sm:h-[100px] md:w-[160px] md:h-[100px] lg:w-[150px] lg:h-[150px] xl:w-[150px] xl:h-[150px] mr-4 sm:mr-6 md:mr-10'
+										className='relative group cursor-pointer flex-shrink-0 w-[100px] h-[100px] sm:w-[100px] sm:h-[100px] md:w-[160px] md:h-[160px] lg:w-[150px] lg:h-[150px] xl:w-[180px] xl:h-[180px] mr-4 sm:mr-6 md:mr-10'
 										onClick={(e) => {
 											e.preventDefault()
 											e.stopPropagation()
@@ -172,10 +172,10 @@ export default function Hero() {
 
 			{/* Floating particles */}
 			<div className='absolute inset-0 overflow-hidden pointer-events-none'>
-				{Array.from({ length: 20 }).map((_, i) => (
+				{Array.from({ length: 25 }).map((_, i) => (
 					<div
 						key={i}
-						className='absolute w-1 h-1 bg-teal-400/40 rounded-full'
+						className='absolute w-1.5 h-1.5 bg-teal-400/40 rounded-full'
 						style={{
 							left: `${Math.random() * 100}%`,
 							top: `${Math.random() * 100}%`,
@@ -250,7 +250,7 @@ export default function Hero() {
 				</div>
 
 				<div
-					className='absolute -bottom-4 sm:-bottom-24 left-0 right-0 z-30 flex justify-center animate-bounce animate-fade-in-up opacity-0'
+					className='absolute -bottom-32 sm:-bottom-24 left-0 right-0 z-30 flex justify-center animate-bounce animate-fade-in-up opacity-0'
 					style={{ animationDelay: '2.2s', animationFillMode: 'forwards' }}>
 					<button
 						onClick={() => {

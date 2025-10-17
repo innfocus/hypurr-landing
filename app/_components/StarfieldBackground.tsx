@@ -26,7 +26,7 @@ const StarfieldBackground = (): JSX.Element => {
 
 		// --- Cài đặt các thông số ---
 		const SPEED = 0.1
-		const NUM_STARS = 800
+		const NUM_STARS = 600
 		const STAR_COLOR = '255, 255, 255'
 
 		let stars: Star[] = [] // Mảng các ngôi sao theo kiểu Star[]
@@ -36,12 +36,14 @@ const StarfieldBackground = (): JSX.Element => {
 			canvas.width = window.innerWidth
 			canvas.height = window.innerHeight
 			stars = []
+
 			for (let i = 0; i < NUM_STARS; i++) {
+				const initialZ = Math.random() * canvas.width
 				stars.push({
 					x: Math.random() * canvas.width - canvas.width / 2,
 					y: Math.random() * canvas.height - canvas.height / 2,
-					z: Math.random() * canvas.width,
-					pz: Math.random() * canvas.width,
+					z: initialZ,
+					pz: initialZ,
 				})
 			}
 		}
@@ -67,7 +69,7 @@ const StarfieldBackground = (): JSX.Element => {
 				const py = star.y * k
 
 				const size = (1 - star.z / canvas.width) * 6
-				const opacity = 1 - star.z / canvas.width
+				const opacity = 0.8 - star.z / canvas.width
 
 				const pz_k = 128.0 / star.pz
 				const p_px = star.x * pz_k
@@ -77,6 +79,7 @@ const StarfieldBackground = (): JSX.Element => {
 				ctx.moveTo(p_px, p_py)
 				ctx.lineTo(px, py)
 				ctx.lineWidth = size
+				ctx.lineCap = 'round'
 				ctx.strokeStyle = `rgba(${STAR_COLOR}, ${opacity})`
 				ctx.stroke()
 

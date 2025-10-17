@@ -13,8 +13,8 @@ export default function DeepKittySection() {
 	const [currentBalance, setCurrentBalance] = useState(0)
 	const [cheapestNft, setCheapestNft] = useState<NFTResult | null>(null)
 
-	const target = cheapestNft?.price || 0
-	const progress = Math.min((currentBalance / target) * 100, 100)
+	const target = cheapestNft?.price ?? 0
+	const progress = target > 0 ? Math.min((currentBalance / target) * 100, 100) : 0
 
 	const [isBuying, setIsBuying] = useState(false)
 	const { isConnected, address } = useAppKitAccount()
@@ -111,7 +111,7 @@ export default function DeepKittySection() {
 					</div>
 
 					<div className='flex items-center justify-center mx-auto'>
-						<div className='relative aspect-square w-full md:w-[500px] md:h-[500px] p-16 bg-gradient-to-br from-teal-500/20 to-cyan-500/20 rounded-full flex items-center justify-center'>
+						<div className='relative aspect-square w-full md:w-[500px] md:h-[500px] p-16 bg-gradient-to-br from-teal-500/60 to-cyan-500/60 backdrop-blur-xs rounded-full flex items-center justify-center'>
 							{/* Ring Chart */}
 							<svg
 								className='absolute inset-0 w-full h-full rotate-[-90deg]'
@@ -121,7 +121,7 @@ export default function DeepKittySection() {
 									cx='50'
 									cy='50'
 									r='45'
-									stroke='rgba(45, 212, 191, 0.2)' /* teal-400/20 */
+									stroke='rgba(45, 212, 191, 0.4)' /* teal-400/20 */
 									strokeWidth='6'
 									fill='none'
 								/>
@@ -149,7 +149,7 @@ export default function DeepKittySection() {
 							</svg>
 
 							{/* Progress percentage display at outer edge */}
-							<div className='absolute top-[-10px] left-1/2 transform -translate-x-1/2 z-10'>
+							<div className='absolute top-[10px] left-1/2 transform -translate-x-1/2 z-10'>
 								<div className='bg-teal-500/20 backdrop-blur-sm rounded-full px-4 py-2 border border-teal-400/30 shadow-lg'>
 									<span className='text-white font-bold text-lg'>
 										{progress.toFixed(1)}%
@@ -157,7 +157,7 @@ export default function DeepKittySection() {
 								</div>
 							</div>
 
-							<div className='relative bg-slate-800/50 backdrop-blur-sm rounded-2xl p-4 border border-teal-400/20 hover:scale-105 hover:shadow-xl hover:shadow-teal-500/20 transition-all duration-700 ease-out w-[65%]'>
+							<div className='relative bg-slate-800/50 rounded-2xl p-4 border border-teal-400/20 hover:scale-105 hover:shadow-xl hover:shadow-teal-500/20 transition-all duration-700 ease-out w-[65%]'>
 								<div className='aspect-square bg-gradient-to-br from-slate-700 to-slate-800 rounded-xl mb-4 flex items-center justify-center relative overflow-hidden '>
 									{cheapestNft && (
 										<div
@@ -166,13 +166,13 @@ export default function DeepKittySection() {
 												backgroundImage: `url(${cheapestNft.image})`,
 											}}></div>
 									)}
-									<div className='absolute inset-0 bg-gradient-to-br from-slate-700/80 to-slate-800/80'></div>
+									{/* <div className='absolute inset-0 bg-gradient-to-br from-slate-700/80 to-slate-800/80'></div> */}
 								</div>
 								<div className='text-center'>
-									<span className='text-slate-400 text-sm'>
+									<span className='text-white text-sm font-bold'>
 										{cheapestNft?.name}
 									</span>
-									<p className='text-xs text-slate-500 mt-1'>
+									<p className='text-xs text-slate-200 mt-1'>
 										{shortenEthBalance(
 											(
 												(cheapestNft?.price || 0) - currentBalance
@@ -194,6 +194,7 @@ export default function DeepKittySection() {
 								isBuying ||
 								currentBalance < cheapestNft?.price
 							}
+							size={'lg'}
 							className='bg-primary text-foreground hover:bg-primary/80 disabled:bg-primary/50 disabled:text-white/70 disabled:cursor-not-allowed !text-[10px] md:!text-sm lg:text-base'>
 							{isBuying ? 'Buying...' : 'Buy Floor Hypur'}
 						</Button>
