@@ -49,7 +49,7 @@ export async function GET(req: Request) {
 		}
 
 		const API_KEY = process.env.NEXT_PUBLIC_OPENSEA_API_KEY || 'demo-api-key'
-		const slug = process.env.NFT_SLUG || ''
+		const slug = process.env.NEXT_PUBLIC_NFT_SLUG || ''
 		// 1. Lấy order rẻ nhất
 		const nftHoldingRes = await fetch(
 			`https://api.opensea.io/api/v2/chain/hyperevm/account/${wallet}/nfts?collection=${slug}`,

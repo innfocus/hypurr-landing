@@ -72,7 +72,7 @@ export async function GET(request: Request) {
 
 export async function fetchSoldNFTs(): Promise<SoldNFT[]> {
 	const API_KEY = process.env.NEXT_PUBLIC_OPENSEA_API_KEY || 'demo-api-key'
-	const slug = process.env.NFT_SLUG || ''
+	const slug = process.env.NEXT_PUBLIC_NFT_SLUG || ''
 
 	const res = await fetch(
 		`https://api.opensea.io/api/v2/events/accounts/${OWNER}?event_type=sale&chain=hyperevm`,
