@@ -52,7 +52,7 @@ export default function Header() {
 						<span className='text-teal-400 text-sm'>
 							${shortenEthDynamic(currentPrice.toString(), 8)}
 						</span>
-						{currentPath != '/' && (
+						{currentPath != '/' && isConnected && (
 							<span className='px-2 py-0.5 bg-teal-600 text-white text-xs font-semibold rounded cursor-pointer'>
 								SWAP
 							</span>

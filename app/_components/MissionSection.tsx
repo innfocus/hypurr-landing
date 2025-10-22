@@ -122,6 +122,13 @@ export default function MissionSection() {
 					))}
 				</div>
 
+				{/* show if nftsList empty */}
+				{nftsList && nftsList.length === 0 && (
+					<div className='text-center text-slate-400 text-lg mb-16 font-bold'>
+						No NFTs
+					</div>
+				)}
+
 				{/* Character grid */}
 				<div className='grid grid-cols-2 md:grid-cols-4 gap-6 mb-8'>
 					{nftsList &&
