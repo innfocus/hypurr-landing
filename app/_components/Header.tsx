@@ -5,6 +5,7 @@ import { Button } from '../../components/ui/button'
 import { useSwapModal } from '../../context/swap-modal-context'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
+import CustomHomeIcon from './CustomHomeIcon'
 
 export default function Header() {
 	const [currentPrice, setCurrentPrice] = useState(0.0)
@@ -43,8 +44,10 @@ export default function Header() {
 		<header className='fixed top-0 left-0 right-0 z-9999 bg-teal-950/30 backdrop-blur-sm border-b border-teal-900/20 pointer-events-none '>
 			<div className='container mx-auto px-6 py-4 flex items-center justify-between pointer-events-auto'>
 				<div className='flex items-center gap-3'>
-					<Link href='/' className='text-xl font-bold text-white tracking-wider'>
-						$HYRSTR
+					<Link href='/' className='text-xl font-bold text-white tracking-wider flex'>
+						{/* Icon Home */}
+						<CustomHomeIcon className='mr-2' />
+						HYRSTR
 					</Link>
 					<button
 						className='flex items-center gap-2 bg-teal-900/30 px-3 py-1 rounded-full'
