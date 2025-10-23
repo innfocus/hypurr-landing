@@ -4,22 +4,22 @@ export default function HowItWorks() {
 	const steps = [
 		{
 			icon: ShoppingCart,
-			title: '50% of each "sale" of $HYRSTR is diverted to the protocol to buy 8.5% sale to HYPE.',
+			title: '10% of each trade of $HYRSTR is taken as a fee and stored in the protocol (minus 0.5% rake to $PNKSTR)',
 			step: '01',
 		},
 		{
 			icon: Users,
-			title: "When there's enough fees in the pool, the protocol buys 1 from HYPE",
+			title: "When there's enough fees in the pool, the machine buys a floor Hypurr",
 			step: '02',
 		},
 		{
 			icon: TrendingUp,
-			title: 'The Hypurr automatically gets listed for 1.5x the price.',
+			title: 'The Hypurr automatically gets listed for 1.1x-1.2x the price',
 			step: '03',
 		},
 		{
 			icon: Wallet,
-			title: 'When the Hypurr is sold, all of the selling funds and excess $HYRSTR.',
+			title: 'When the Hypurr is sold, all of the HYPE buys and burns $HYRSTR or is added to the liquidity pool.',
 			step: '04',
 		},
 	]
