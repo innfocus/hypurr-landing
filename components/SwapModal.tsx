@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { X, ArrowUpDown, Copy } from 'lucide-react'
 import {
+	useAppKit,
 	useAppKitAccount,
 	useAppKitBalance,
 	useAppKitProvider,
@@ -46,12 +47,11 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 
 	const { selectedNetworkId } = useAppKitState()
 	const [maxSwap, setMaxSwap] = useState<number | undefined>()
+	const { open } = useAppKit()
 
 	useEffect(() => {
-		if (isConnected) {
-			fetchBalance().then(({ data }) => setBalance(data?.balance))
-			fetchBalanceToken()
-		}
+		fetchBalance().then(({ data }) => setBalance(data?.balance))
+		fetchBalanceToken()
 	}, [isConnected, address])
 
 	useEffect(() => {
@@ -136,6 +136,8 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 				console.error('Error fetching token balance:', error)
 				setTokenBalance('0')
 			}
+		} else {
+			setTokenBalance('0')
 		}
 	}
 
@@ -449,14 +451,24 @@ export function SwapModal({ isOpen, onClose }: SwapModalProps) {
 
 				{/* Action Button */}
 				<Button
-					onClick={handleSwap}
-					className={`w-full font-medium py-3 rounded-xl ${
+					onClick={() => {
+						if (isConnected) {
+							handleSwap()
+						} else {
+							open()
+						}
+					}}
+					className={`w-full font-medium py-3 rounded-xl cursor-pointer ${
 						validationError
 							? 'bg-gray-500 hover:bg-gray-500 cursor-not-allowed'
 							: 'bg-primary hover:bg-primary/80'
 					} text-white`}
-					disabled={!fromAmount || !toAmount || isLoading || !!validationError}>
-					{isLoading
+					disabled={
+						isConnected && (!fromAmount || !toAmount || isLoading || !!validationError)
+					}>
+					{!isConnected
+						? 'Connect Wallet'
+						: isLoading
 						? 'Processing...'
 						: validationError
 						? 'Insufficient Balance'
